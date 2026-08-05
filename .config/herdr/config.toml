@@ -1,0 +1,31 @@
+[terminal]
+default_shell = "/bin/zsh"
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+s"
+new_tab = "prefix+c"
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+split_vertical = "prefix+percent"
+split_horizontal = "prefix+double_quote"
+
+[ui]
+mouse_capture = true
+copy_on_select = true
+hide_tab_bar_when_single_tab = false
+pane_borders = true
+pane_gaps = true
+
+agent_panel_sort = "spaces"
+[session]
+resume_agents_on_restore = true
+
+[experimental]
+pane_history = true
+
+[theme]
+name = "catppuccin"
+auto_switch = false
