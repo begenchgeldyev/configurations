@@ -6,6 +6,7 @@ new_cwd = "follow"
 
 [keys]
 prefix = "ctrl+s"
+toggle_sidebar = "prefix+p"
 new_tab = "prefix+c"
 rename_tab = "prefix+comma"
 focus_pane_left = "prefix+h"
