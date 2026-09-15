@@ -1,0 +1,7 @@
+*
+!*/
+!.gitignore
+!opencode.json
+!tui.json
+!agents/*.md
+!plugins/*.js

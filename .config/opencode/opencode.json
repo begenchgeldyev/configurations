@@ -1,0 +1,62 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "skills": {
+    "paths": ["/home/begench/projects/mattpocock-skills/skills"]
+  },
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git",
+    "oh-my-openagent"
+  ],
+  "provider": {
+    "synecta": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Synecta Hub",
+      "options": {
+        "baseURL": "https://llm-hub.synecta.tech/v1",
+        "apiKey": "{env:SYNECTA_API_KEY}"
+      },
+      "models": {
+        "local-code-qwen3-coder": {
+          "name": "local-code-qwen3-coder"
+        },
+        "code-gpt-oss-120b": {
+          "name": "code-gpt-oss-120b"
+        },
+        "code-qwen3-coder": {
+          "name": "code-qwen3-coder"
+        },
+        "autocomplete-gigachat": {
+          "name": "autocomplete-gigachat"
+        },
+        "plan-deepseek-v4-pro": {
+          "name": "plan-deepseek-v4-pro"
+        },
+        "ext-code-deepseek-v4-pro": {
+          "name": "ext-code-deepseek-v4-pro"
+        },
+        "ext-code-kimi-k2.7": {
+          "name": "ext-code-kimi-k2.7"
+        },
+        "ext-plan-kimi-k3": {
+          "name": "ext-plan-kimi-k3"
+        }
+      }
+    },
+    "anthropic": {
+      "name": "Claude via kz",
+      "options": {
+        "baseURL": "http://46.8.254.240:8317/v1",
+        "apiKey": "{env:ANTHROPIC_API_KEY}"
+      },
+      "models": {
+        "claude-fable-5-1": {
+          "options": {
+            "thinking": {
+              "blockBinding": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

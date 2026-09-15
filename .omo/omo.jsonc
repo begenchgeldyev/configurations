@@ -1,0 +1,200 @@
+// OMO configuration
+{
+  "[opencode]": {
+    "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+    "agents": {
+      "sisyphus": {
+        "models": [
+          {
+            "model": "anthropic/claude-opus-5",
+            "reasoning": "max"
+          },
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "medium"
+          }
+        ]
+      },
+      "hephaestus": {
+        "model": "openai/gpt-5.6-sol",
+        "reasoning": "medium"
+      },
+      "oracle": {
+        "models": [
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "xhigh"
+          },
+          {
+            "model": "google/gemini-3.1-pro-preview",
+            "reasoning": "high"
+          },
+          {
+            "model": "anthropic/claude-opus-5",
+            "reasoning": "max"
+          }
+        ]
+      },
+      "librarian": {
+        "models": [
+          {
+            "model": "openai/gpt-5.6-luna-fast",
+            "reasoning": "low"
+          },
+          {
+            "model": "anthropic/claude-haiku-4-5"
+          },
+          {
+            "model": "openai/gpt-5.4-nano"
+          }
+        ]
+      },
+      "explore": {
+        "models": [
+          {
+            "model": "openai/gpt-5.6-luna-fast",
+            "reasoning": "low"
+          },
+          {
+            "model": "anthropic/claude-haiku-4-5"
+          },
+          {
+            "model": "openai/gpt-5.4-nano"
+          }
+        ]
+      },
+      "multimodal-looker": {
+        "models": [
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "low"
+          },
+          {
+            "model": "openai/gpt-5-nano"
+          }
+        ]
+      },
+      "prometheus": {
+        "model": "anthropic/claude-fable-5",
+        "reasoning": "high"
+      },
+      "metis": {
+        "model": "anthropic/claude-opus-5",
+        "reasoning": "high"
+      },
+      "momus": {
+        "models": [
+          {
+            "model": "openai/gpt-5.6-terra",
+            "reasoning": "high"
+          },
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "xhigh"
+          },
+          {
+            "model": "anthropic/claude-opus-5",
+            "reasoning": "max"
+          },
+          {
+            "model": "google/gemini-3.1-pro-preview",
+            "reasoning": "high"
+          }
+        ]
+      },
+      "atlas": {
+        "models": [
+          "anthropic/claude-sonnet-5",
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "medium"
+          }
+        ]
+      },
+      "sisyphus-junior": {
+        "models": [
+          "anthropic/claude-sonnet-5",
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "medium"
+          }
+        ]
+      }
+    },
+    "categories": {
+      "visual-engineering": {
+        "models": [
+          {
+            "model": "anthropic/claude-opus-5",
+            "reasoning": "max"
+          },
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "medium"
+          }
+        ]
+      },
+      "ultrabrain": {
+        "model": "openai/gpt-5.6-sol",
+        "reasoning": "xhigh"
+      },
+      "deep": {
+        "model": "openai/gpt-5.6-sol",
+        "reasoning": "medium"
+      },
+      "artistry": {
+        "models": [
+          {
+            "model": "anthropic/claude-fable-5",
+            "reasoning": "high"
+          },
+          {
+            "model": "anthropic/claude-opus-5",
+            "reasoning": "high"
+          }
+        ]
+      },
+      "quick": {
+        "model": "anthropic/claude-haiku-4-5"
+      },
+      "unspecified-low": {
+        "models": [
+          {
+            "model": "openai/gpt-5.6-terra",
+            "reasoning": "high"
+          },
+          {
+            "model": "anthropic/claude-sonnet-5",
+            "reasoning": "low"
+          }
+        ]
+      },
+      "unspecified-high": {
+        "models": [
+          {
+            "model": "anthropic/claude-opus-5",
+            "reasoning": "high"
+          },
+          {
+            "model": "openai/gpt-5.6-sol",
+            "reasoning": "high"
+          }
+        ]
+      },
+      "writing": {
+        "models": [
+          {
+            "model": "anthropic/claude-opus-5",
+            "reasoning": "low"
+          },
+          {
+            "model": "google/gemini-3.6-flash"
+          }
+        ]
+      }
+    }
+  },
+  "_migrations": [
+    "2026-08-reasoning-unification"
+  ]
+}
