@@ -1,7 +1,7 @@
 ---
 description: Reviews code changes against repository standards and the originating spec
 mode: all
-model: openai/gpt-5.6-sol
+model: openai/gpt-6-astra
 variant: high
 permission:
   edit: deny
