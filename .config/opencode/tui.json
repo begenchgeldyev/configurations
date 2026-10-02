@@ -2,6 +2,6 @@
   "$schema": "https://opencode.ai/tui.json",
   "theme": "system",
   "plugin": [
-    "oh-my-openagent"
+    "oh-my-openagent@beta"
   ]
 }
