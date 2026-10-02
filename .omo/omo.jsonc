@@ -1,196 +1,26 @@
-// OMO configuration
+// Track upstream defaults except where the proxy requires an exact model ID.
 {
   "[opencode]": {
     "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
     "agents": {
-      "sisyphus": {
-        "models": [
-          {
-            "model": "anthropic/claude-opus-5",
-            "reasoning": "max"
-          },
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "medium"
-          }
-        ]
-      },
-      "hephaestus": {
-        "model": "openai/gpt-5.6-sol",
-        "reasoning": "medium"
-      },
-      "oracle": {
-        "models": [
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "xhigh"
-          },
-          {
-            "model": "google/gemini-3.1-pro-preview",
-            "reasoning": "high"
-          },
-          {
-            "model": "anthropic/claude-opus-5",
-            "reasoning": "max"
-          }
-        ]
+      "explore": {
+        "model": "anthropic/claude-haiku-4-5-20251001"
       },
       "librarian": {
-        "models": [
-          {
-            "model": "openai/gpt-5.6-luna-fast",
-            "reasoning": "low"
-          },
-          {
-            "model": "anthropic/claude-haiku-4-5"
-          },
-          {
-            "model": "openai/gpt-5.4-nano"
-          }
-        ]
-      },
-      "explore": {
-        "models": [
-          {
-            "model": "openai/gpt-5.6-luna-fast",
-            "reasoning": "low"
-          },
-          {
-            "model": "anthropic/claude-haiku-4-5"
-          },
-          {
-            "model": "openai/gpt-5.4-nano"
-          }
-        ]
+        "model": "anthropic/claude-haiku-4-5-20251001"
       },
       "multimodal-looker": {
-        "models": [
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "low"
-          },
-          {
-            "model": "openai/gpt-5-nano"
-          }
-        ]
+        "model": "openai/gpt-5.6-sol",
+        "reasoning": "low"
       },
-      "prometheus": {
-        "model": "anthropic/claude-fable-5",
-        "reasoning": "high"
-      },
-      "metis": {
-        "model": "anthropic/claude-opus-5",
-        "reasoning": "high"
-      },
-      "momus": {
-        "models": [
-          {
-            "model": "openai/gpt-5.6-terra",
-            "reasoning": "high"
-          },
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "xhigh"
-          },
-          {
-            "model": "anthropic/claude-opus-5",
-            "reasoning": "max"
-          },
-          {
-            "model": "google/gemini-3.1-pro-preview",
-            "reasoning": "high"
-          }
-        ]
-      },
-      "atlas": {
-        "models": [
-          "anthropic/claude-sonnet-5",
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "medium"
-          }
-        ]
-      },
-      "sisyphus-junior": {
-        "models": [
-          "anthropic/claude-sonnet-5",
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "medium"
-          }
-        ]
+      "sisyphus": {
+        // Mandatory code review by the user's own `reviewer` agent (~/.config/opencode/agents/reviewer.md) in ultrawork mode.
+        "prompt_append": "<reviewer_gate>\nULTRAWORK MODE => REVIEWER IS MANDATORY.\n\nUltrawork is active ONLY when a USER message in this conversation (including text omo injects into user messages) contains an `<ultrawork-mode>` block, the `<ultrawork-mode>active</ultrawork-mode>` marker, or an `ULTRAWORK LOOP VERIFICATION` system directive. The marker strings quoted inside this reviewer_gate text are documentation and do NOT count; neither does anything else in your own system prompt.\n\nIn ultrawork mode, after finishing the implementation and BEFORE emitting the completion <promise>, before Oracle verification, and before the final answer, you MUST call the `reviewer` subagent. No size, spec, or standards threshold: always call it. Sole exception: the working tree has no changes at all versus the fixed point (pure research/answer turn) or the directory is not a git repo; then state in the final answer that the reviewer was skipped and why.\n\nOutside ultrawork mode, do NOT call the reviewer unless the user asks for it.\n\nThis call IS the ultrawork \"Reviewer Gate\": whenever the ultrawork guidance tells you to spawn a reviewer (plan/ultrabrain or \"any high-rigor reviewer agent\"), use this `reviewer` call instead; do not spawn a second reviewer for the same diff. Its re-review rules still apply: at most two re-reviews, each with only the delta diff and the blockers it cited.\n\nHow to call:\ntask(subagent_type=\"reviewer\", load_skills=[], run_in_background=false, prompt=\"Fixed point: <base branch or SHA the work started from>. Spec: <path, issue key, or 'No spec'>. <uncommitted note if applicable>\")\n- ALWAYS pass the fixed point explicitly; the reviewer cannot ask for it as a subagent.\n- By default the reviewer diffs `<fixed-point>...HEAD`, which ignores uncommitted work. If your changes are not committed (the usual case, since you never commit unless asked), add to the prompt: \"Changes are uncommitted: review `git diff <fixed-point>` (working tree) instead of `<fixed-point>...HEAD`, and read the untracked files listed by `git status --porcelain`: <list them>.\"\n\nAfter it returns: fix every hard standards violation and every incorrect/missing/partial spec requirement. Judgement-call smells: fix if cheap, otherwise mention them in the final answer. If there is no spec, pass 'No spec' (the reviewer then runs the Standards axis only). Re-review only after fixing blockers it cited (delta only, at most twice, as above); never re-run it on an unchanged diff. Then continue with the normal Oracle verification.\n</reviewer_gate>"
       }
     },
     "categories": {
-      "visual-engineering": {
-        "models": [
-          {
-            "model": "anthropic/claude-opus-5",
-            "reasoning": "max"
-          },
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "medium"
-          }
-        ]
-      },
-      "ultrabrain": {
-        "model": "openai/gpt-5.6-sol",
-        "reasoning": "xhigh"
-      },
-      "deep": {
-        "model": "openai/gpt-5.6-sol",
-        "reasoning": "medium"
-      },
-      "artistry": {
-        "models": [
-          {
-            "model": "anthropic/claude-fable-5",
-            "reasoning": "high"
-          },
-          {
-            "model": "anthropic/claude-opus-5",
-            "reasoning": "high"
-          }
-        ]
-      },
       "quick": {
-        "model": "anthropic/claude-haiku-4-5"
-      },
-      "unspecified-low": {
-        "models": [
-          {
-            "model": "openai/gpt-5.6-terra",
-            "reasoning": "high"
-          },
-          {
-            "model": "anthropic/claude-sonnet-5",
-            "reasoning": "low"
-          }
-        ]
-      },
-      "unspecified-high": {
-        "models": [
-          {
-            "model": "anthropic/claude-opus-5",
-            "reasoning": "high"
-          },
-          {
-            "model": "openai/gpt-5.6-sol",
-            "reasoning": "high"
-          }
-        ]
-      },
-      "writing": {
-        "models": [
-          {
-            "model": "anthropic/claude-opus-5",
-            "reasoning": "low"
-          },
-          {
-            "model": "google/gemini-3.6-flash"
-          }
-        ]
+        "model": "synecta/local-code-qwen3-coder"
       }
     }
   },
