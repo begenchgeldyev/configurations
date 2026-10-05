@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#MISE description="Symlink the dotfiles into $HOME, then install mise tools"
+#USAGE flag "-n --dry-run" help="Show the plan without changing anything"
+# Fresh machine: clone to ~/projects/configurations, cd there, then `mise trust && mise run install`.
+set -euo pipefail
+
+repo=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+dry_run=${usage_dry_run:-false}
+stamp=$(date +%s)
+act() { [[ $dry_run == true ]] || "$@"; }
+
+while IFS= read -r -d '' rel; do
+  case $rel in
+    .gitignore | */.gitignore | .env.example | mise-tasks/*) continue ;;
+  esac
+  src=$repo/$rel
+  dst=$HOME/$rel
+  if [[ -L $dst && $(readlink "$dst") == "$src" ]]; then
+    continue
+  elif [[ ! -e $dst && ! -L $dst ]]; then
+    echo "link     ~/$rel"
+    act mkdir -p "$(dirname "$dst")"
+  elif [[ ! -L $dst ]] && cmp -s "$src" "$dst"; then
+    echo "replace  ~/$rel (identical)"
+    act rm "$dst"
+  else
+    echo "backup   ~/$rel -> ~/$rel.bak.$stamp"
+    act mv "$dst" "$dst.bak.$stamp"
+  fi
+  act ln -s "$src" "$dst"
+done < <(git -C "$repo" ls-files -z)
+
+if [[ $dry_run == true ]]; then mise install --dry-run; else mise install; fi
+[[ -e $HOME/.env ]] || echo "note: ~/.env is missing; copy .env.example there and fill in the API keys"
