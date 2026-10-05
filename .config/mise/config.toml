@@ -1,0 +1,16 @@
+[tools]
+agy = "latest"
+claude = "latest"
+fd = "latest"
+gemini = { version = "latest", allow_builds = ["@github/keytar", "node-pty"] }
+gh = "latest"
+herdr = "latest"
+neovim = "latest"
+node = "25.8.0"
+opencode = "latest"
+ripgrep = "latest"
+tmux = "latest"
+uv = "latest"
+
+[settings.upgrade]
+auto_prune = false
