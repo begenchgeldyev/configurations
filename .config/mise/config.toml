@@ -12,5 +12,9 @@ ripgrep = "latest"
 tmux = "latest"
 uv = "latest"
 
+[env]
+# Resolves to ~/.env (template: .env.example); .config/opencode/opencode.json reads these via {env:...}.
+_.file = { path = ".env", redact = true }
+
 [settings.upgrade]
 auto_prune = false
