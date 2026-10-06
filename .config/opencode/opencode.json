@@ -18,30 +18,16 @@
         "apiKey": "{env:SYNECTA_API_KEY}"
       },
       "models": {
-        "local-code-qwen3-coder": {
-          "name": "local-code-qwen3-coder"
-        },
-        "code-gpt-oss-120b": {
-          "name": "code-gpt-oss-120b"
-        },
-        "code-qwen3-coder": {
-          "name": "code-qwen3-coder"
-        },
-        "autocomplete-gigachat": {
-          "name": "autocomplete-gigachat"
-        },
-        "plan-deepseek-v4-pro": {
-          "name": "plan-deepseek-v4-pro"
-        },
-        "ext-code-deepseek-v4-pro": {
-          "name": "ext-code-deepseek-v4-pro"
-        },
-        "ext-code-kimi-k2.7": {
-          "name": "ext-code-kimi-k2.7"
-        },
-        "ext-plan-kimi-k3": {
-          "name": "ext-plan-kimi-k3"
-        }
+        "code": { "name": "Код · рекомендуемая" },
+        "ext-ollama-deepseek-v4-pro": { "name": "Код · внешний контур · для трудных задач" },
+        "ext-ollama-deepseek-v4.1-flash": { "name": "Код · внешний контур · основная" },
+        "local-qwen3-coder-strict": { "name": "Код · своя нода · бесплатно" },
+        "ru-mws-gpt-oss-120b": { "name": "Код · РФ · экономная" },
+        "ru-ya-deepseek-v4.1-flash": { "name": "Код · РФ · окно 1M" },
+        "ru-mws-glm-5": { "name": "Код · РФ · сильная" },
+        "ext-ollama-glm-5": { "name": "Код · внешний контур · второе мнение" },
+        "ext-deepseek-v4-pro": { "name": "Код · внешний контур · резерв" },
+        "autocomplete-gigachat": { "name": "Автодополнение" }
       }
     },
     "anthropic": {
@@ -120,6 +106,10 @@
       "environment": {
         "FIGMA_API_KEY": "{env:FIGMA_API_KEY}"
       }
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--executablePath=/usr/bin/chromium"]
     }
   }
 }
