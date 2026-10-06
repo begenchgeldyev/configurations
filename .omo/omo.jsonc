@@ -1,27 +1,90 @@
-// Track upstream defaults except where the proxy requires an exact model ID.
+// Model orchestration policy (usage-DB driven, 2026-10-05):
+//   Claude Max x5  → thinking: main agent, visual-engineering, deep-high, oracle, specialists
+//   Gemini AI Pro  → vision (looker) + fallback for volume lanes (idle sub, tapped)
+//   Codex $20      → gpt-6-astra / gpt-5.6 lanes (upstream defaults, proven in DB)
+//   Synecta $40    → deliberate low-volume lanes only: oracle (второе мнение),
+//                    deep-high (для трудных задач) + fallback rungs that fire on outages.
+//                    Bulk NEVER goes here — the free local node owns all volume lanes.
+//   local-qwen3-coder-strict (own node, free, unlimited) → all bulk coding/grep lanes
 {
   "[opencode]": {
     "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+    // Its git env prefix replaces output.args with a new object, which opencode ignores and which
+    // also discards later plugins' rewrites (rtk). Disabled so the rtk plugin can rewrite git commands.
+    "disabled_hooks": ["non-interactive-env"],
     "agents": {
-      "explore": {
-        "model": "anthropic/claude-haiku-4-5-20251001"
-      },
-      "librarian": {
-        "model": "anthropic/claude-haiku-4-5-20251001"
-      },
-      "multimodal-looker": {
-        "model": "openai/gpt-5.6-sol",
-        "reasoning": "low"
-      },
       "sisyphus": {
+        // Main orchestrator = judgment work, ~85% of all tokens (1.3B in-tok/2wk in DB).
+        // NEVER on metered Synecta — that burns the $40 budget in days. Claude Max x5 covers it.
+        "model": "anthropic/claude-opus-5-5",
+        "variant": "high",
+        // Emergency ladder: Gemini sub first, then the 1M-window deepseek — the only
+        // Synecta model that can hold a compacted main-agent context. Metered, fires
+        // only when both subscriptions are down.
+        "fallback_models": ["gemini/gemini-pro-agent", "synecta/ext-ollama-deepseek-v4-pro"],
         // Mandatory code review by the user's own `reviewer` agent (~/.config/opencode/agents/reviewer.md) in ultrawork mode.
         "prompt_append": "<reviewer_gate>\nULTRAWORK MODE => REVIEWER IS MANDATORY.\n\nUltrawork is active ONLY when a USER message in this conversation (including text omo injects into user messages) contains an `<ultrawork-mode>` block, the `<ultrawork-mode>active</ultrawork-mode>` marker, or an `ULTRAWORK LOOP VERIFICATION` system directive. The marker strings quoted inside this reviewer_gate text are documentation and do NOT count; neither does anything else in your own system prompt.\n\nIn ultrawork mode, after finishing the implementation and BEFORE emitting the completion <promise>, before Oracle verification, and before the final answer, you MUST call the `reviewer` subagent. No size, spec, or standards threshold: always call it. Sole exception: the working tree has no changes at all versus the fixed point (pure research/answer turn) or the directory is not a git repo; then state in the final answer that the reviewer was skipped and why.\n\nOutside ultrawork mode, do NOT call the reviewer unless the user asks for it.\n\nThis call IS the ultrawork \"Reviewer Gate\": whenever the ultrawork guidance tells you to spawn a reviewer (plan/ultrabrain or \"any high-rigor reviewer agent\"), use this `reviewer` call instead; do not spawn a second reviewer for the same diff. Its re-review rules still apply: at most two re-reviews, each with only the delta diff and the blockers it cited.\n\nHow to call:\ntask(subagent_type=\"reviewer\", load_skills=[], run_in_background=false, prompt=\"Fixed point: <base branch or SHA the work started from>. Spec: <path, issue key, or 'No spec'>. <uncommitted note if applicable>\")\n- ALWAYS pass the fixed point explicitly; the reviewer cannot ask for it as a subagent.\n- By default the reviewer diffs `<fixed-point>...HEAD`, which ignores uncommitted work. If your changes are not committed (the usual case, since you never commit unless asked), add to the prompt: \"Changes are uncommitted: review `git diff <fixed-point>` (working tree) instead of `<fixed-point>...HEAD`, and read the untracked files listed by `git status --porcelain`: <list them>.\"\n\nAfter it returns: fix every hard standards violation and every incorrect/missing/partial spec requirement. Judgement-call smells: fix if cheap, otherwise mention them in the final answer. If there is no spec, pass 'No spec' (the reviewer then runs the Standards axis only). Re-review only after fixing blockers it cited (delta only, at most twice, as above); never re-run it on an unchanged diff. Then continue with the normal Oracle verification.\n</reviewer_gate>"
+      },
+      "sisyphus-junior": {
+        // Base executor (no category matched): free local node, like all bulk junior lanes.
+        "model": "synecta/local-qwen3-coder-strict",
+        "fallback_models": ["gemini/gemini-3.1-pro-low", "synecta/code"]
+      },
+      "explore": {
+        // High-frequency code-grep lane → free unlimited local node (was claude-haiku,
+        // which shared the Max x5 quota the 1.3B-token main agent lives on).
+        "model": "synecta/local-qwen3-coder-strict",
+        "fallback_models": ["synecta/ext-ollama-deepseek-v4.1-flash", "anthropic/claude-haiku-4-5-20251001"]
+      },
+      "librarian": {
+        // Docs lookup + synthesis → free local node too (rare lane, ~5 sessions/2wk).
+        // Haiku kept only as fallback for when the local node is down.
+        "model": "synecta/local-qwen3-coder-strict",
+        "fallback_models": ["synecta/ext-ollama-deepseek-v4.1-flash", "anthropic/claude-haiku-4-5-20251001"]
+      },
+      "multimodal-looker": {
+        // Vision lane: gemini-3-flash is fast (looker polls max 120s), vision-native,
+        // and taps the idle Gemini AI Pro sub. Verified served by the kz proxy.
+        "model": "gemini/gemini-3-flash",
+        "reasoning": "low",
+        "fallback_models": ["anthropic/claude-haiku-4-5-20251001"]
+      },
+      "oracle": {
+        // Consultation lane = "second opinion" → ext-ollama-glm-5, a different model family
+        // than everything else (that is the point of an oracle). METERED: ~65M in-tok/2wk —
+        // watch the hub dashboard; if burn is too fast, delete this block (upstream default
+        // resolves to gpt-5.6-sol xhigh via the Codex sub, proven in the usage DB).
+        "model": "synecta/ext-ollama-glm-5",
+        "fallback_models": ["anthropic/claude-opus-5-5"]
       }
     },
     "categories": {
+      // Volume lanes → free unlimited local node ("Claude thinks, qwen codes").
+      // local-qwen3-coder-strict is the hub's verified /v1/models ID — the old
+      // local-code-qwen3-coder pin was not in the hub's model list.
+      // If the local node is down → gemini-3.1-pro-low (idle Gemini AI Pro sub).
       "quick": {
-        "model": "synecta/local-code-qwen3-coder"
+        "model": "synecta/local-qwen3-coder-strict",
+        "fallback_models": ["gemini/gemini-3.1-pro-low", "synecta/ext-ollama-deepseek-v4.1-flash"]
+      },
+      "deep-low": {
+        "model": "synecta/local-qwen3-coder-strict",
+        "fallback_models": ["gemini/gemini-3.1-pro-low", "synecta/ext-ollama-deepseek-v4.1-flash"]
+      },
+      "unspecified-low": {
+        "model": "synecta/local-qwen3-coder-strict",
+        "fallback_models": ["gemini/gemini-3.1-pro-low", "synecta/ext-ollama-deepseek-v4.1-flash"]
+      },
+      "deep-high": {
+        // "Для трудных задач" model on the hard-tasks lane — the semantic fit for metered
+        // spend: rare (~14M in-tok/2wk), high-stakes, different family than the subs.
+        "model": "synecta/ext-ollama-deepseek-v4-pro",
+        "fallback_models": ["openai/gpt-6-astra"]
       }
+      // Deliberately NOT overridden (upstream defaults resolve to subscriptions):
+      //   visual-engineering / artistry → claude via Max x5 (60% of junior volume, vision + taste)
+      //   ultrabrain                     → gpt-6-astra via Codex (rare, high-stakes)
+      //   writing / metis / momus / prometheus / atlas → dormant or cheap, defaults proven in DB
     }
   },
   "_migrations": [
