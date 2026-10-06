@@ -12,6 +12,10 @@
     // Its git env prefix replaces output.args with a new object, which opencode ignores and which
     // also discards later plugins' rewrites (rtk). Disabled so the rtk plugin can rewrite git commands.
     "disabled_hooks": ["non-interactive-env"],
+    "runtime_fallback": {
+      "enabled": true,
+      "retry_on_errors": [403, 429, 500, 502, 503, 504]
+    },
     "agents": {
       "sisyphus": {
         // Main orchestrator = judgment work, ~85% of all tokens (1.3B in-tok/2wk in DB).
