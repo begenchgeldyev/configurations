@@ -1,9 +1,10 @@
 // Model orchestration policy (usage-DB driven, 2026-10-05):
-//   Claude Max x5  → thinking: main agent, visual-engineering, deep-high, oracle, specialists
-//   Gemini AI Pro  → vision (looker) + fallback for volume lanes (idle sub, tapped)
+//   Claude Max x5  → thinking: main agent, visual-engineering, deep-high, specialists
+//   Gemini AI Pro  → oracle (второе мнение), librarian, writing, vision (looker)
+//                    + fallback for volume lanes (idle sub, tapped)
 //   Codex $20      → gpt-6-astra / gpt-5.6 lanes (upstream defaults, proven in DB)
-//   Synecta $40    → deliberate low-volume lanes only: oracle (второе мнение),
-//                    deep-high (для трудных задач) + fallback rungs that fire on outages.
+//   Synecta $40    → deliberate low-volume lanes only: deep-high (для трудных задач)
+//                    + fallback rungs that fire on outages.
 //                    Bulk NEVER goes here — the free local node owns all volume lanes.
 //   local-qwen3-coder-strict (own node, free, unlimited) → all bulk coding/grep lanes
 {
@@ -41,10 +42,11 @@
         "fallback_models": ["synecta/ext-ollama-deepseek-v4.1-flash", "anthropic/claude-haiku-4-5-20251001"]
       },
       "librarian": {
-        // Docs lookup + synthesis → free local node too (rare lane, ~5 sessions/2wk).
-        // Haiku kept only as fallback for when the local node is down.
-        "model": "synecta/local-qwen3-coder-strict",
-        "fallback_models": ["synecta/ext-ollama-deepseek-v4.1-flash", "anthropic/claude-haiku-4-5-20251001"]
+        // Docs/web lookup + synthesis → Gemini Flash, a general long-context model instead of
+        // the code-tuned local node. Rare lane (~6 sessions/2wk), barely dents the sub.
+        // Local node is the first rung when Gemini is down, haiku the last.
+        "model": "gemini/gemini-3.8-flash-high",
+        "fallback_models": ["synecta/local-qwen3-coder-strict", "synecta/ext-ollama-deepseek-v4.1-flash", "anthropic/claude-haiku-4-5-20251001"]
       },
       "multimodal-looker": {
         // Vision lane: gemini-3-flash is fast (looker polls max 120s), vision-native,
@@ -54,12 +56,11 @@
         "fallback_models": ["anthropic/claude-haiku-4-5-20251001"]
       },
       "oracle": {
-        // Consultation lane = "second opinion" → ext-ollama-glm-5, a different model family
-        // than everything else (that is the point of an oracle). METERED: ~65M in-tok/2wk —
-        // watch the hub dashboard; if burn is too fast, delete this block (upstream default
-        // resolves to gpt-5.6-sol xhigh via the Codex sub, proven in the usage DB).
-        "model": "synecta/ext-ollama-glm-5",
-        "fallback_models": ["anthropic/claude-opus-5-5"]
+        // Consultation lane = "second opinion" → Gemini Pro: a different model family than the
+        // Claude main agent (that is the point of an oracle), on the flat-rate Gemini sub instead
+        // of metered Synecta (~65M in-tok/2wk). glm-5 stays as the first rung, a third family.
+        "model": "gemini/gemini-pro-agent",
+        "fallback_models": ["synecta/ext-ollama-glm-5", "anthropic/claude-opus-5-5"]
       }
     },
     "categories": {
@@ -84,11 +85,17 @@
         // spend: rare (~14M in-tok/2wk), high-stakes, different family than the subs.
         "model": "synecta/ext-ollama-deepseek-v4-pro",
         "fallback_models": ["openai/gpt-6-astra"]
+      },
+      "writing": {
+        // Docs and prose → Gemini Pro instead of the upstream claude-opus-5-5, which keeps that
+        // Max x5 quota for the main agent. The upstream default stays as the fallback.
+        "model": "gemini/gemini-pro-agent",
+        "fallback_models": ["anthropic/claude-opus-5-5"]
       }
       // Deliberately NOT overridden (upstream defaults resolve to subscriptions):
       //   visual-engineering / artistry → claude via Max x5 (60% of junior volume, vision + taste)
       //   ultrabrain                     → gpt-6-astra via Codex (rare, high-stakes)
-      //   writing / metis / momus / prometheus / atlas → dormant or cheap, defaults proven in DB
+      //   metis / momus / prometheus / atlas → dormant or cheap, defaults proven in DB
     }
   },
   "_migrations": [
