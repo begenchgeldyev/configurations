@@ -11,7 +11,7 @@ act() { [[ $dry_run == true ]] || "$@"; }
 
 while IFS= read -r -d '' rel; do
   case $rel in
-    .gitignore | */.gitignore | .env.example | mise-tasks/*) continue ;;
+    .gitignore | */.gitignore | .env.example | README.md | mise-tasks/*) continue ;;
   esac
   src=$repo/$rel
   dst=$HOME/$rel
