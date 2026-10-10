@@ -61,6 +61,13 @@
         // of metered Synecta (~65M in-tok/2wk). glm-5 stays as the first rung, a third family.
         "model": "gemini/gemini-pro-agent",
         "fallback_models": ["synecta/ext-ollama-glm-5", "anthropic/claude-opus-5-5"]
+      },
+      "reviewer": {
+        // User agent (~/.config/opencode/agents/reviewer.md): model + variant live there
+        // (openai/gpt-6-astra, high). No "model" key here on purpose, it would override the file.
+        // Review = second opinion on Claude's code → oracle's ladder: non-Claude families first,
+        // glm-5 is the only rung off the kz proxy, Claude last.
+        "fallback_models": ["gemini/gemini-pro-agent", "synecta/ext-ollama-glm-5", "anthropic/claude-opus-5-5"]
       }
     },
     "categories": {
