@@ -5,10 +5,6 @@
       "/home/begench/projects/mattpocock-skills/skills"
     ]
   },
-  "plugin": [
-    "superpowers@git+https://github.com/obra/superpowers.git",
-    "oh-my-openagent@beta"
-  ],
   "provider": {
     "anthropic": {
       "name": "Claude via kz",
@@ -70,23 +66,6 @@
     }
   },
   "mcp": {
-    "jira": {
-      "type": "local",
-      "command": ["docker", "run", "-i", "--rm",
-                  "-e", "JIRA_URL", "-e", "JIRA_PERSONAL_TOKEN",
-                  "ghcr.io/sooperset/mcp-atlassian:latest"],
-      "environment": {
-        "JIRA_URL": "https://projects.synecta.tech",
-        "JIRA_PERSONAL_TOKEN": "{env:JIRA_PERSONAL_TOKEN}"
-      }
-    },
-    "figma": {
-      "type": "local",
-      "command": ["npx", "-y", "figma-developer-mcp", "--stdio"],
-      "environment": {
-        "FIGMA_API_KEY": "{env:FIGMA_API_KEY}"
-      }
-    },
     "chrome-devtools": {
       "type": "local",
       "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--executablePath=/usr/bin/chromium"]
