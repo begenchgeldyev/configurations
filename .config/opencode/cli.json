@@ -3,6 +3,9 @@
   "theme": {
     "name": "system"
   },
+  "system": {
+      "sidebar": "hide"
+  },
   "plugins": [
     "oh-my-openagent@beta"
   ]
