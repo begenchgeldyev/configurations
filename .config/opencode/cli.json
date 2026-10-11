@@ -3,8 +3,8 @@
   "theme": {
     "name": "system"
   },
-  "system": {
-      "sidebar": "hide"
+  "session": {
+    "sidebar": "hide"
   },
-  "plugins": ["./herdr-opencode"],
+  "plugins": ["./herdr-opencode"]
 }
