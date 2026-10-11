@@ -10,6 +10,7 @@ source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 eval "$(atuin init zsh)"
 
 alias v='nvim'
+alias c='opencode'
 export EDITOR=nvim
 export VISUAL=nvim
 export M5_PATH="$HOME/m5/system"
