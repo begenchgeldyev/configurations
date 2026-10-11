@@ -6,7 +6,5 @@
   "system": {
       "sidebar": "hide"
   },
-  "plugins": [
-    "oh-my-openagent@beta"
-  ]
+  "plugins": ["./herdr-opencode"],
 }
