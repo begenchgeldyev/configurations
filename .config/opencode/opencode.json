@@ -10,31 +10,11 @@
     "oh-my-openagent@beta"
   ],
   "provider": {
-    "synecta": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Synecta Hub",
-      "options": {
-        "baseURL": "https://llm-hub.synecta.tech/v1",
-        "apiKey": "{env:SYNECTA_API_KEY}"
-      },
-      "models": {
-        "code": { "name": "Код · рекомендуемая" },
-        "ext-ollama-deepseek-v4-pro": { "name": "Код · внешний контур · для трудных задач" },
-        "ext-ollama-deepseek-v4.1-flash": { "name": "Код · внешний контур · основная" },
-        "local-qwen3-coder-strict": { "name": "Код · своя нода · бесплатно" },
-        "ru-mws-gpt-oss-120b": { "name": "Код · РФ · экономная" },
-        "ru-ya-deepseek-v4.1-flash": { "name": "Код · РФ · окно 1M" },
-        "ru-mws-glm-5": { "name": "Код · РФ · сильная" },
-        "ext-ollama-glm-5": { "name": "Код · внешний контур · второе мнение" },
-        "ext-deepseek-v4-pro": { "name": "Код · внешний контур · резерв" },
-        "autocomplete-gigachat": { "name": "Автодополнение" }
-      }
-    },
     "anthropic": {
       "name": "Claude via kz",
       "options": {
-        "baseURL": "http://46.8.254.240:8317/v1",
-        "apiKey": "{env:ANTHROPIC_API_KEY}"
+        "baseURL": "{env:VPS_IP}",
+        "apiKey": "{env:VPS_API_KEY}"
       },
       "models": {
         "claude-fable-5-1": {
@@ -50,16 +30,16 @@
       "name": "Codex via kz",
       "blacklist": ["gpt-6-astra-pro"],
       "options": {
-        "baseURL": "http://46.8.254.240:8317/v1",
-        "apiKey": "{env:ANTHROPIC_API_KEY}"
+        "baseURL": "{env:VPS_IP}",
+        "apiKey": "{env:VPS_API_KEY}"
       }
     },
     "gemini": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Gemini via kz",
       "options": {
-        "baseURL": "http://46.8.254.240:8317/v1",
-        "apiKey": "{env:ANTHROPIC_API_KEY}"
+        "baseURL": "{env:VPS_IP}",
+        "apiKey": "{env:VPS_API_KEY}"
       },
       "models": {
         "gemini-3.8-flash-high": {
