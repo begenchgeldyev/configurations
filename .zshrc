@@ -13,6 +13,7 @@ alias v='nvim'
 alias c='opencode'
 export EDITOR=nvim
 export VISUAL=nvim
+bindkey -M viins '^[^L' clear-screen
 export M5_PATH="$HOME/m5/system"
 
 if [ -f "$HOME/.config/opencode/.env" ]; then
