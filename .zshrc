@@ -1,4 +1,4 @@
-export PATH="$HOME/.opencode/bin:$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
 
 unset NO_COLOR
