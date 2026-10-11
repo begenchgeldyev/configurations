@@ -2,7 +2,7 @@ export PATH="$HOME/.local/bin:$PATH"
 eval "$(mise activate zsh)"
 
 unset NO_COLOR
-stty -ixon 2>/dev/null   # allow tmux Ctrl-S prefix
+stty -ixon 2>/dev/null   # allow herdr Ctrl-S prefix
 
 eval "$(starship init zsh)"
 source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

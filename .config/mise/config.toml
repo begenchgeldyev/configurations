@@ -9,7 +9,6 @@ neovim = "latest"
 node = "25.8.0"
 "npm:@opencode/cli" = { version = "latest", allow_builds = ["@opencode/cli"] }
 ripgrep = "latest"
-tmux = "latest"
 uv = "latest"
 
 [env]
