@@ -6,5 +6,5 @@
   "session": {
     "sidebar": "hide"
   },
-  "plugins": ["./herdr-opencode"]
+  "plugins": ["./herdr-opencode", "oh-my-opencode-slim"]
 }

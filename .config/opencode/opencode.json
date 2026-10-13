@@ -5,6 +5,7 @@
       "/home/begench/projects/mattpocock-skills/skills"
     ]
   },
+  "plugin": ["oh-my-opencode-slim"],
   "provider": {
     "anthropic": {
       "name": "Claude via kz",
@@ -78,5 +79,14 @@
         "Authorization": "Bearer {env:GITHUB_PAT}"
       }
     }
-  }
+  },
+  "agent": {
+    "explore": {
+      "disable": true
+    },
+    "general": {
+      "disable": true
+    }
+  },
+  "lsp": true
 }

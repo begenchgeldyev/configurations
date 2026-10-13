@@ -23,7 +23,7 @@ exec zsh
 | `.config/mise/` | CLI tools (opencode v2 comes from `npm:@opencode/cli`); loads `~/.env` |
 | `.config/nvim/` | Neovim |
 | `.config/opencode/` | opencode: providers, MCP servers, `reviewer` agent |
-| `.omo/omo.jsonc` | oh-my-openagent: model per agent |
+| `.config/opencode/oh-my-opencode-slim.json` | oh-my-opencode-slim: model per agent, subagent panes in Herdr |
 | `.env.example` | Template for `~/.env` |
 
 ## Secrets
