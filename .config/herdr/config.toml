@@ -18,6 +18,8 @@ split_vertical = "prefix+percent"
 split_horizontal = "prefix+double_quote"
 
 [ui]
+sidebar_width = 60
+sidebar_max_width = 80
 mouse_capture = true
 copy_on_select = true
 hide_tab_bar_when_single_tab = false
