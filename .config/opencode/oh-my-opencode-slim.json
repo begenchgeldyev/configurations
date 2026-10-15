@@ -4,30 +4,60 @@
   "multiplexer": {
     "type": "herdr"
   },
+  "disabled_agents": [],
+  "image_routing": "direct",
+  "fallback": {
+    "enabled": true
+  },
   "presets": {
     "openai": {
       "orchestrator": {
-        "model": "anthropic/claude-opus-5-5",
-        "variant": "high",
+        "model": [
+          {
+            "id": "anthropic/claude-opus-5-5",
+            "variant": "high"
+          },
+          {
+            "id": "gemini/gemini-3.8-flash-high",
+            "variant": "high"
+          },
+          "synecta/ext-ollama-deepseek-v4-pro"
+        ],
         "skills": [
           "*"
         ],
         "mcps": [
-          "*",
-          "!context7"
+          "jira",
+          "confluence",
+          "gitlab"
         ]
       },
       "oracle": {
-        "model": "openai/gpt-6-astra",
-        "variant": "high",
+        "model": [
+          "gemini/gemini-3.8-flash-high",
+          "synecta/ext-ollama-glm-5",
+          "anthropic/claude-opus-5-5"
+        ],
         "skills": [
           "simplify"
         ],
-        "mcps": []
+        "mcps": [
+          "context7"
+        ],
+        "permission": {
+          "edit": "deny",
+          "write": "deny",
+          "apply_patch": "deny",
+          "ast_grep_replace": "deny"
+        }
       },
       "librarian": {
-        "model": "openai/gpt-6-luna",
-        "variant": "low",
+        "model": [
+          "gemini/gemini-3.8-flash-high",
+          "synecta/local-qwen3-coder-strict",
+          "synecta/ext-ollama-deepseek-v4.1-flash",
+          "anthropic/claude-haiku-4-5-20251001"
+        ],
         "skills": [],
         "mcps": [
           "context7",
@@ -35,72 +65,52 @@
         ]
       },
       "explorer": {
-        "model": "openai/gpt-6-luna",
-        "variant": "low",
+        "model": [
+          "synecta/local-qwen3-coder-strict",
+          "synecta/ext-ollama-deepseek-v4.1-flash",
+          "anthropic/claude-haiku-4-5-20251001"
+        ],
         "skills": [],
         "mcps": []
       },
       "designer": {
-        "model": "openai/gpt-6-luna",
-        "variant": "medium",
-        "skills": [],
-        "mcps": []
-      },
-      "fixer": {
-        "model": "openai/gpt-6-luna",
-        "variant": "high",
-        "skills": [],
-        "mcps": []
-      }
-    },
-    "opencode-go": {
-      "orchestrator": {
-        "model": "opencode-go/minimax-m3",
-        "variant": "thinking",
-        "skills": [
-          "*"
+        "model": [
+          {
+            "id": "gemini/gemini-3.8-flash-high",
+            "variant": "high"
+          },
+          {
+            "id": "anthropic/claude-fable-5-1",
+            "variant": "max"
+          },
+          {
+            "id": "anthropic/claude-opus-5-5",
+            "variant": "max"
+          }
         ],
-        "mcps": [
-          "*",
-          "!context7"
-        ]
-      },
-      "oracle": {
-        "model": "opencode-go/qwen3.7-max",
-        "variant": "max",
-        "skills": [
-          "simplify"
-        ],
-        "mcps": []
-      },
-      "explorer": {
-        "model": "opencode-go/deepseek-v4-flash",
-        "variant": "high",
-        "skills": [],
-        "mcps": []
-      },
-      "librarian": {
-        "model": "opencode-go/deepseek-v4-flash",
-        "variant": "high",
         "skills": [],
         "mcps": [
-          "context7",
-          "gh_grep"
+          "chrome-devtools",
+          "figma"
         ]
       },
-      "designer": {
-        "model": "opencode-go/kimi-k2.7-code",
-        "skills": [],
-        "mcps": []
-      },
       "fixer": {
-        "model": "opencode-go/deepseek-v4-flash",
-        "variant": "high",
+        "model": [
+          "gemini/gemini-3.8-flash-high",
+          "synecta/local-qwen3-coder-strict",
+          "synecta/ext-ollama-deepseek-v4.1-flash"
+        ],
         "skills": [],
         "mcps": []
       },
       "observer": {
-        "model": "opencode-go/mimo-v2.5",
+        "model": [
+          {
+            "id": "gemini/gemini-3-flash",
+            "variant": "low"
+          },
+          "anthropic/claude-haiku-4-5-20251001"
+        ],
         "skills": [],
         "mcps": []
       }
