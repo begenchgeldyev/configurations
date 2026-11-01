@@ -14,29 +14,6 @@ exec zsh
 - Existing files are kept as `<name>.bak.<time>`.
 - Safe to re-run. Re-run it after moving the clone.
 
-## Update OpenCode from Windows
-
-Run this in PowerShell to update OpenCode's configuration and plugins from this
-repository and set `VPS_IP` to `http://208.92.227.18:8317/v1`:
-
-```powershell
-$script = Join-Path $env:TEMP 'update-opencode.ps1'
-Invoke-WebRequest -UseBasicParsing 'https://raw.githubusercontent.com/begenchgeldyev/configurations/master/update-opencode-windows.ps1' -OutFile $script -ErrorAction Stop
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script
-```
-
-Git for Windows is required. The script uses a temporary sparse checkout of
-`.config/opencode` and copies those settings/plugins into `$HOME\.config\opencode`
-(or `$env:XDG_CONFIG_HOME\opencode`). It adapts the Linux home and Chromium paths
-for Windows and preserves an existing local Herdr integration when present.
-Use `-ConfigDirectory` for a custom destination, `-VpsUrl` for another endpoint,
-or `-SkipRestart` to defer the backend restart.
-
-The user and process environment are updated, along with the `VPS_IP` assignment
-in `$HOME\.env` and an existing OpenCode `.env` file. API-key values in those
-files are preserved. Only OpenCode configuration files are installed from the
-repository.
-
 ## What's inside
 
 | Path | What |
