@@ -3,13 +3,14 @@ import { Show } from "solid-js"
 
 export function latestPrompt(messages: readonly { type: string; text?: string }[] | undefined): string {
   const message = messages?.findLast((item) => item.type === "user" && item.text?.trim())
-  const text = message?.text?.replace(/\s+/g, " ").trim() ?? ""
-  return text.length > 180 ? `${text.slice(0, 179)}…` : text
+  return message?.text?.replace(/\s+/g, " ").trim() ?? ""
 }
 
 export default Plugin.define({
   id: "local.last-prompt",
   setup(context) {
+    const background = context.themeMode === "light" ? "#e6e6e6" : "#303030"
+    const foreground = context.themeMode === "light" ? "#202020" : "#eeeeee"
     return context.ui.slot({
       append: "app",
       render: () => {
@@ -19,8 +20,23 @@ export default Plugin.define({
         }
         return (
           <Show when={prompt()}>
-            <box position="absolute" top={context.ui.tabs.enabled() ? 1 : 0} left={0} width="100%" height={2} backgroundColor="#202020" zIndex={100}>
-              <text fg={context.theme.text.base} bg="#202020">› {prompt()}</text>
+            <box
+              position="absolute"
+              top={context.ui.tabs.enabled() ? 1 : 0}
+              left={0}
+              width="100%"
+              height={3}
+              border
+              borderStyle="single"
+              borderColor={context.themeMode === "light" ? "#aaaaaa" : "#606060"}
+              paddingLeft={1}
+              paddingRight={1}
+              backgroundColor={background}
+              zIndex={100}
+            >
+              <text width="100%" height={1} wrapMode="none" truncate fg={foreground} bg={background}>
+                {prompt()}
+              </text>
             </box>
           </Show>
         )
