@@ -74,5 +74,4 @@ and terminal clients using a plugin-enabled backend see the same inventory.
 
 ## Review status
 
-The plugin approach is approved. This written specification is ready for user
-review before implementation planning.
+The plugin approach and written specification were approved on 2026-11-01.
