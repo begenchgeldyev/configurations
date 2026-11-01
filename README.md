@@ -39,3 +39,4 @@ exec zsh
 
 - Edit configs in place (they are symlinks), then commit from this repo.
 - OpenCode's `last-prompt` TUI plugin pins the latest user prompt in a bordered bar at the top of the session. Long prompts truncate to one line to fit the terminal. It overlays three transcript rows because OpenCode does not provide a dedicated top-of-session slot. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.
+- OpenCode's `context-footer` replaces the built-in prompt footer to hide dollar costs while keeping context usage, live activity, and keyboard hints. It is paired with `-opencode.prompt.footer` in `cli.json`.
