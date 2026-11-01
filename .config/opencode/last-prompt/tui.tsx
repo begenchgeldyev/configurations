@@ -11,13 +11,16 @@ export default Plugin.define({
   id: "local.last-prompt",
   setup(context) {
     return context.ui.slot({
-      prepend: "session.composer.top",
-      render: (props) => {
-        const prompt = () => latestPrompt(context.data.session.message.list(props.sessionID))
+      append: "app",
+      render: () => {
+        const prompt = () => {
+          const route = context.ui.router.current()
+          return route.type === "session" ? latestPrompt(context.data.session.message.list(route.sessionID)) : ""
+        }
         return (
           <Show when={prompt()}>
-            <box paddingLeft={1} paddingRight={1}>
-              <text fg={context.theme.text.muted}>Last prompt: {prompt()}</text>
+            <box position="absolute" top={context.ui.tabs.enabled() ? 1 : 0} left={0} width="100%" height={1} backgroundColor="#383838" zIndex={100}>
+              <text fg={context.theme.text.base} bg="#383838">› {prompt()}</text>
             </box>
           </Show>
         )

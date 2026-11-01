@@ -21,10 +21,9 @@ exec zsh
 | `.zshrc` | zsh: mise, starship, atuin, syntax highlighting |
 | `.config/herdr/` | Herdr: `Ctrl-s` prefix, zsh as default shell |
 | `.config/mise/` | CLI tools (opencode v2 comes from `npm:@opencode/cli`); loads `~/.env` |
-| `.config/nvim/` | Neovim |
 | `.config/opencode/` | opencode: providers, MCP servers, `reviewer` agent |
 | `.config/zed/` | Zed: settings, AI providers through `ai-server` |
-| `.omo/omo.jsonc` | oh-my-openagent: model per agent |
+| `.config/opencode/oh-my-opencode-slim.json` | oh-my-opencode-slim: model per agent, subagent panes in Herdr |
 | `.env.example` | Template for `~/.env` |
 
 ## Secrets
@@ -39,4 +38,4 @@ exec zsh
 ## Day to day
 
 - Edit configs in place (they are symlinks), then commit from this repo.
-- OpenCode's `last-prompt` TUI plugin displays the latest user prompt above the input. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.
+- OpenCode's `last-prompt` TUI plugin pins the latest user prompt at the top of the session. It overlays one transcript row because OpenCode does not provide a dedicated top-of-session slot. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.

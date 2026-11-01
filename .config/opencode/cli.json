@@ -7,5 +7,5 @@
     "sidebar": "hide",
     "markdown": "rendered"
   },
-  "plugins": ["./herdr-opencode", "./last-prompt"]
+  "plugins": ["./herdr-opencode", "oh-my-opencode-slim", "./last-prompt"]
 }

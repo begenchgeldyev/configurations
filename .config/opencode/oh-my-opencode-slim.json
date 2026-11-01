@@ -1,0 +1,119 @@
+{
+  "$schema": "https://unpkg.com/oh-my-opencode-slim@latest/oh-my-opencode-slim.schema.json",
+  "preset": "openai",
+  "multiplexer": {
+    "type": "herdr"
+  },
+  "disabled_agents": [],
+  "image_routing": "direct",
+  "fallback": {
+    "enabled": true
+  },
+  "presets": {
+    "openai": {
+      "orchestrator": {
+        "model": [
+          {
+            "id": "anthropic/claude-opus-5-5",
+            "variant": "high"
+          },
+          {
+            "id": "gemini/gemini-3.8-flash-high",
+            "variant": "high"
+          },
+          "synecta/ext-ollama-deepseek-v4-pro"
+        ],
+        "skills": [
+          "*"
+        ],
+        "mcps": [
+          "jira",
+          "confluence",
+          "gitlab"
+        ]
+      },
+      "oracle": {
+        "model": [
+          "gemini/gemini-3.8-flash-high",
+          "synecta/ext-ollama-glm-5",
+          "anthropic/claude-opus-5-5"
+        ],
+        "skills": [
+          "simplify"
+        ],
+        "mcps": [
+          "context7"
+        ],
+        "permission": {
+          "edit": "deny",
+          "write": "deny",
+          "apply_patch": "deny",
+          "ast_grep_replace": "deny"
+        }
+      },
+      "librarian": {
+        "model": [
+          "gemini/gemini-3.8-flash-high",
+          "synecta/local-qwen3-coder-strict",
+          "synecta/ext-ollama-deepseek-v4.1-flash",
+          "anthropic/claude-haiku-4-5-20251001"
+        ],
+        "skills": [],
+        "mcps": [
+          "context7",
+          "gh_grep"
+        ]
+      },
+      "explorer": {
+        "model": [
+          "synecta/local-qwen3-coder-strict",
+          "synecta/ext-ollama-deepseek-v4.1-flash",
+          "anthropic/claude-haiku-4-5-20251001"
+        ],
+        "skills": [],
+        "mcps": []
+      },
+      "designer": {
+        "model": [
+          {
+            "id": "gemini/gemini-3.8-flash-high",
+            "variant": "high"
+          },
+          {
+            "id": "anthropic/claude-fable-5-1",
+            "variant": "max"
+          },
+          {
+            "id": "anthropic/claude-opus-5-5",
+            "variant": "max"
+          }
+        ],
+        "skills": [],
+        "mcps": [
+          "chrome-devtools",
+          "figma"
+        ]
+      },
+      "fixer": {
+        "model": [
+          "gemini/gemini-3.8-flash-high",
+          "synecta/local-qwen3-coder-strict",
+          "synecta/ext-ollama-deepseek-v4.1-flash"
+        ],
+        "skills": [],
+        "mcps": []
+      },
+      "observer": {
+        "model": [
+          {
+            "id": "gemini/gemini-3-flash",
+            "variant": "low"
+          },
+          "anthropic/claude-haiku-4-5-20251001"
+        ],
+        "skills": [],
+        "mcps": []
+      }
+    }
+  }
+}
