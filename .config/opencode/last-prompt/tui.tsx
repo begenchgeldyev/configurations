@@ -23,20 +23,28 @@ export default Plugin.define({
             <box
               position="absolute"
               top={context.ui.tabs.enabled() ? 1 : 0}
-              left={0}
-              width="100%"
+              left={2}
+              right={2}
               height={3}
-              border
-              borderStyle="single"
-              borderColor={context.themeMode === "light" ? "#aaaaaa" : "#606060"}
               paddingLeft={1}
               paddingRight={1}
               backgroundColor={background}
               zIndex={100}
             >
-              <text width="100%" height={1} wrapMode="none" truncate fg={foreground} bg={background}>
-                {prompt()}
-              </text>
+              <box
+                width="100%"
+                height={3}
+                border
+                borderStyle="single"
+                borderColor={context.themeMode === "light" ? "#aaaaaa" : "#606060"}
+                paddingLeft={1}
+                paddingRight={1}
+                backgroundColor={background}
+              >
+                <text width="100%" height={1} wrapMode="none" truncate fg={foreground} bg={background}>
+                  {prompt()}
+                </text>
+              </box>
             </box>
           </Show>
         )
