@@ -4,7 +4,8 @@
     "name": "system"
   },
   "session": {
-    "sidebar": "hide"
+    "sidebar": "hide",
+    "markdown": "rendered"
   },
-  "plugins": ["./herdr-opencode"]
+  "plugins": ["./herdr-opencode", "./last-prompt"]
 }

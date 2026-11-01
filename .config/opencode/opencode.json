@@ -23,7 +23,7 @@
       }
     },
     "openai": {
-      "name": "Codex via kz",
+      "name": "Codex via proxy",
       "blacklist": ["gpt-6-astra-pro"],
       "options": {
         "baseURL": "{env:VPS_IP}",

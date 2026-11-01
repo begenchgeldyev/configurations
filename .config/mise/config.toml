@@ -13,6 +13,10 @@ uv = "latest"
 
 [env]
 _.file = { path = ".env", redact = true }
+# Zed reads custom provider keys from <PROVIDER_NAME>_API_KEY
+CLAUDE_VIA_AI_SERVER_API_KEY = { value = "{{ env.VPS_API_KEY }}", redact = true }
+CODEX_VIA_AI_SERVER_API_KEY = { value = "{{ env.VPS_API_KEY }}", redact = true }
+GEMINI_VIA_AI_SERVER_API_KEY = { value = "{{ env.VPS_API_KEY }}", redact = true }
 
 [settings.upgrade]
 auto_prune = false

@@ -1,0 +1,134 @@
+{
+  "cli_default_open_behavior": "new_window",
+  "lsp": {
+    "vtsls": {
+      "settings": {
+        "typescript": {
+          "updateImportsOnFileMove": {
+            "enabled": "always"
+          }
+        },
+        "javascript": {
+          "updateImportsOnFileMove": {
+            "enabled": "always"
+          }
+        }
+      },
+      "enable_lsp_tasks": true
+    }
+  },
+  "agent": {
+    "dock": "right",
+    "default_model": {
+      "provider": "Claude via ai-server",
+      "model": "claude-opus-5-5"
+    },
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "language_models": {
+    "anthropic_compatible": {
+      "Claude via ai-server": {
+        "api_url": "http://ai-server:8317",
+        "available_models": [
+          {
+            "name": "claude-opus-5-5",
+            "display_name": "Claude Opus 5.5",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "mode": { "type": "thinking", "budget_tokens": 16384 },
+            "capabilities": { "tools": true, "images": true, "prompt_caching": true }
+          },
+          {
+            "name": "claude-fable-5-1",
+            "display_name": "Claude Fable 5.1",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "mode": { "type": "thinking", "budget_tokens": 16384 },
+            "capabilities": { "tools": true, "images": true, "prompt_caching": true }
+          },
+          {
+            "name": "claude-sonnet-5-5",
+            "display_name": "Claude Sonnet 5.5",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "mode": { "type": "thinking", "budget_tokens": 16384 },
+            "capabilities": { "tools": true, "images": true, "prompt_caching": true }
+          },
+          {
+            "name": "claude-haiku-5-5",
+            "display_name": "Claude Haiku 5.5",
+            "max_tokens": 1000000,
+            "max_output_tokens": 128000,
+            "capabilities": { "tools": true, "images": true, "prompt_caching": true }
+          }
+        ]
+      }
+    },
+    "openai_compatible": {
+      "Codex via ai-server": {
+        "api_url": "http://ai-server:8317/v1",
+        "available_models": [
+          {
+            "name": "gpt-6-astra",
+            "display_name": "GPT-6 Astra",
+            "max_tokens": 1050000,
+            "max_output_tokens": 128000,
+            "reasoning_effort": "high",
+            "capabilities": { "tools": true, "images": true, "parallel_tool_calls": true, "chat_completions": false }
+          }
+        ]
+      },
+      "Gemini via ai-server": {
+        "api_url": "http://ai-server:8317/v1",
+        "available_models": [
+          { "name": "gemini-3.8-flash-high", "display_name": "Gemini 3.8 Flash High", "max_tokens": 1048576, "max_output_tokens": 65536 },
+          { "name": "gemini-3.7-flash-high", "display_name": "Gemini 3.7 Flash High", "max_tokens": 1048576, "max_output_tokens": 65536 },
+          { "name": "gemini-3.6-flash-high", "display_name": "Gemini 3.6 Flash High", "max_tokens": 1048576, "max_output_tokens": 65536 },
+          { "name": "gemini-3-flash", "display_name": "Gemini 3 Flash", "max_tokens": 1048576, "max_output_tokens": 65536 },
+          { "name": "gemini-3.5-flash-lite", "display_name": "Gemini 3.5 Flash Lite", "max_tokens": 1048576, "max_output_tokens": 65536 },
+          { "name": "gemini-3.1-flash-lite", "display_name": "Gemini 3.1 Flash Lite", "max_tokens": 1048576, "max_output_tokens": 65536 },
+          { "name": "gemini-3.1-pro-low", "display_name": "Gemini 3.1 Pro Low", "max_tokens": 1048576, "max_output_tokens": 65536 },
+          { "name": "gemini-pro-agent", "display_name": "Gemini Pro Agent", "max_tokens": 1048576, "max_output_tokens": 65536 }
+        ]
+      }
+    }
+  },
+  "collaboration_panel": {
+    "dock": "right",
+  },
+  "git_panel": {
+    "dock": "right",
+  },
+  "project_panel": {
+    "dock": "right",
+  },
+  "outline_panel": {
+    "dock": "right",
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "vim_mode": true,
+  "base_keymap": "VSCode",
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000,
+    },
+  },
+  "buffer_font_family": "Cascadia Code",
+  "file_types": {
+    "dotenv": [".env*"],
+    "python": ["*.py"],
+  },
+  "linked_edits": true,
+  "icon_theme": "Catppuccin Macchiato",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "Ayu Dark",
+  },
+}

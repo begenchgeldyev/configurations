@@ -23,6 +23,7 @@ exec zsh
 | `.config/mise/` | CLI tools (opencode v2 comes from `npm:@opencode/cli`); loads `~/.env` |
 | `.config/nvim/` | Neovim |
 | `.config/opencode/` | opencode: providers, MCP servers, `reviewer` agent |
+| `.config/zed/` | Zed: settings, AI providers through `ai-server` |
 | `.omo/omo.jsonc` | oh-my-openagent: model per agent |
 | `.env.example` | Template for `~/.env` |
 
@@ -31,7 +32,11 @@ exec zsh
 - Keys live in `~/.env`, never in the repo.
 - mise loads `~/.env`; `opencode.json` reads keys as `{env:NAME}`.
 - Start opencode from a shell where mise is active.
+- Zed settings can't read env vars. They use the `ai-server` hostname, so map it once per machine:
+  `echo "$(echo "$VPS_IP" | sed -E 's#^https?://([^:/]+).*#\1#') ai-server" | sudo tee -a /etc/hosts`
+- mise sets the Zed key vars (`*_VIA_AI_SERVER_API_KEY`) from `VPS_API_KEY`. Start Zed from a shell where mise is active, or paste the key once in Zed's agent settings.
 
 ## Day to day
 
 - Edit configs in place (they are symlinks), then commit from this repo.
+- OpenCode's `last-prompt` TUI plugin displays the latest user prompt above the input. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.
