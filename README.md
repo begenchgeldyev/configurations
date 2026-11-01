@@ -38,4 +38,4 @@ exec zsh
 ## Day to day
 
 - Edit configs in place (they are symlinks), then commit from this repo.
-- OpenCode's `last-prompt` TUI plugin pins the latest user prompt at the top of the session. It overlays one transcript row because OpenCode does not provide a dedicated top-of-session slot. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.
+- OpenCode's `last-prompt` TUI plugin pins the latest user prompt at the top of the session. It overlays two transcript rows because OpenCode does not provide a dedicated top-of-session slot. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.

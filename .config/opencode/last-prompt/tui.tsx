@@ -19,8 +19,8 @@ export default Plugin.define({
         }
         return (
           <Show when={prompt()}>
-            <box position="absolute" top={context.ui.tabs.enabled() ? 1 : 0} left={0} width="100%" height={1} backgroundColor="#383838" zIndex={100}>
-              <text fg={context.theme.text.base} bg="#383838">› {prompt()}</text>
+            <box position="absolute" top={context.ui.tabs.enabled() ? 1 : 0} left={0} width="100%" height={2} backgroundColor="#202020" zIndex={100}>
+              <text fg={context.theme.text.base} bg="#202020">› {prompt()}</text>
             </box>
           </Show>
         )
