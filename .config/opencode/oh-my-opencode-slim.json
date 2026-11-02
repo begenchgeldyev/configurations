@@ -1,118 +1,159 @@
 {
   "$schema": "https://unpkg.com/oh-my-opencode-slim@latest/oh-my-opencode-slim.schema.json",
-  "preset": "openai",
+  "preset": "work",
   "multiplexer": {
-    "type": "herdr"
+    "type": "herdr",
+    "viewer": "tui"
   },
   "disabled_agents": [],
   "image_routing": "direct",
   "fallback": {
     "enabled": true
   },
+  "stripOrchestratorModel": false,
   "presets": {
-    "openai": {
-      "orchestrator": {
-        "model": [
-          {
-            "id": "anthropic/claude-opus-5-5",
-            "variant": "high"
-          },
-          {
-            "id": "gemini/gemini-3.8-flash-high",
-            "variant": "high"
-          },
-          "synecta/ext-ollama-deepseek-v4-pro"
-        ],
-        "skills": [
-          "*"
-        ],
-        "mcps": [
-          "jira",
-          "confluence",
-          "gitlab"
-        ]
-      },
-      "oracle": {
-        "model": [
-          "gemini/gemini-3.8-flash-high",
-          "synecta/ext-ollama-glm-5",
-          "anthropic/claude-opus-5-5"
-        ],
-        "skills": [
-          "simplify"
-        ],
-        "mcps": [
-          "context7"
-        ],
-        "permission": {
-          "edit": "deny",
-          "write": "deny",
-          "apply_patch": "deny",
-          "ast_grep_replace": "deny"
-        }
-      },
-      "librarian": {
-        "model": [
-          "gemini/gemini-3.8-flash-high",
-          "synecta/local-qwen3-coder-strict",
-          "synecta/ext-ollama-deepseek-v4.1-flash",
-          "anthropic/claude-haiku-4-5-20251001"
-        ],
-        "skills": [],
-        "mcps": [
-          "context7",
-          "gh_grep"
-        ]
-      },
-      "explorer": {
-        "model": [
-          "synecta/local-qwen3-coder-strict",
-          "synecta/ext-ollama-deepseek-v4.1-flash",
-          "anthropic/claude-haiku-4-5-20251001"
-        ],
-        "skills": [],
-        "mcps": []
-      },
-      "designer": {
-        "model": [
-          {
-            "id": "gemini/gemini-3.8-flash-high",
-            "variant": "high"
-          },
-          {
-            "id": "anthropic/claude-fable-5-1",
-            "variant": "max"
-          },
-          {
-            "id": "anthropic/claude-opus-5-5",
-            "variant": "max"
+    "work": {
+      "agents": {
+        "orchestrator": {
+          "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
+            "synecta/ru-ya-deepseek-v4.1-flash",
+            "openai/gpt-6.1-sol"
+          ],
+          "skills": [
+            "*"
+          ],
+          "mcps": [
+            "jira",
+            "confluence",
+            "gitlab"
+          ]
+        },
+        "oracle": {
+          "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
+            "synecta/ru-ya-deepseek-v4.1-flash",
+            "openai/gpt-6.1-terra"
+          ],
+          "skills": [
+            "simplify"
+          ],
+          "mcps": [
+            "context7"
+          ],
+          "permission": {
+            "edit": "deny",
+            "write": "deny",
+            "apply_patch": "deny",
+            "ast_grep_replace": "deny"
           }
-        ],
-        "skills": [],
-        "mcps": [
-          "chrome-devtools",
-          "figma"
-        ]
-      },
-      "fixer": {
-        "model": [
-          "gemini/gemini-3.8-flash-high",
-          "synecta/local-qwen3-coder-strict",
-          "synecta/ext-ollama-deepseek-v4.1-flash"
-        ],
-        "skills": [],
-        "mcps": []
-      },
-      "observer": {
-        "model": [
-          {
-            "id": "gemini/gemini-3-flash",
-            "variant": "low"
-          },
-          "anthropic/claude-haiku-4-5-20251001"
-        ],
-        "skills": [],
-        "mcps": []
+        },
+        "librarian": {
+          "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
+            "synecta/ru-ya-deepseek-v4.1-flash",
+            "openai/gpt-6-luna"
+          ],
+          "skills": [],
+          "mcps": [
+            "context7",
+            "gh_grep"
+          ]
+        },
+        "explorer": {
+          "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
+            "synecta/ru-ya-deepseek-v4.1-flash",
+            "openai/gpt-6-luna"
+          ],
+          "skills": [],
+          "mcps": []
+        },
+        "designer": {
+          "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
+            "synecta/ru-ya-deepseek-v4.1-flash",
+            "openai/gpt-6-luna"
+          ],
+          "skills": [],
+          "mcps": [
+            "chrome-devtools",
+            "figma"
+          ]
+        },
+        "fixer": {
+          "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
+            "synecta/ru-ya-deepseek-v4.1-flash",
+            "openai/gpt-6-luna"
+          ],
+          "skills": [],
+          "mcps": []
+        },
+        "observer": {
+          "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
+            {
+              "id": "gemini/gemini-3-flash",
+              "variant": "low"
+            }
+          ],
+          "skills": [],
+          "mcps": []
+        }
+      }
+    },
+    "personal": {
+      "extends": "work",
+      "agents": {
+        "orchestrator": {
+          "model": [
+            "openai/gpt-6.1-sol",
+            "gemini/gemini-3.8-flash-high",
+            "openai/gpt-6-luna"
+          ],
+          "mcps": []
+        },
+        "oracle": {
+          "model": [
+            "openai/gpt-6.1-terra",
+            "gemini/gemini-3.8-flash-high",
+            "openai/gpt-6.1-sol"
+          ]
+        },
+        "librarian": {
+          "model": [
+            "openai/gpt-6-luna",
+            "gemini/gemini-3.5-flash-lite"
+          ]
+        },
+        "explorer": {
+          "model": [
+            "gemini/gemini-3.5-flash-lite",
+            "openai/gpt-6-luna"
+          ]
+        },
+        "designer": {
+          "model": [
+            "openai/gpt-6-luna",
+            "gemini/gemini-3.8-flash-high"
+          ]
+        },
+        "fixer": {
+          "model": [
+            "openai/gpt-6-luna",
+            "gemini/gemini-3-flash"
+          ]
+        },
+        "observer": {
+          "model": [
+            {
+              "id": "gemini/gemini-3-flash",
+              "variant": "low"
+            },
+            "openai/gpt-6-luna"
+          ]
+        }
       }
     }
   }
