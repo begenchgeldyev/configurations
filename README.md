@@ -24,6 +24,7 @@ exec zsh
 | `.config/opencode/` | opencode: providers, MCP servers, `reviewer` agent |
 | `.config/zed/` | Zed: settings, AI providers through `ai-server` |
 | `.config/opencode/oh-my-opencode-slim.json` | oh-my-opencode-slim: model per agent, subagent panes in Herdr |
+| `.ssh/config` | SSH hosts; `server` (VPS) is pinned to port 8022, see `docs/remote-opencode.md` |
 | `.env.example` | Template for `~/.env` |
 
 ## Secrets
@@ -34,6 +35,14 @@ exec zsh
 - Zed settings can't read env vars. They use the `ai-server` hostname, so map it once per machine:
   `echo "$(echo "$VPS_IP" | sed -E 's#^https?://([^:/]+).*#\1#') ai-server" | sudo tee -a /etc/hosts`
 - mise sets the Zed key vars (`*_VIA_AI_SERVER_API_KEY`) from `VPS_API_KEY`. Start Zed from a shell where mise is active, or paste the key once in Zed's agent settings.
+
+## Remote hosts
+
+- `ssh server` → VPS `208.92.227.18` on port **8022**: several egresses drop
+  outbound TCP/22 after a burst of connections. The `~/.ssh/server` key is not in
+  the repo — copy it by hand.
+- opencode on that host runs off the same configs, cli-proxy-api only (no Synecta
+  hub): see [`docs/remote-opencode.md`](docs/remote-opencode.md).
 
 ## Day to day
 
