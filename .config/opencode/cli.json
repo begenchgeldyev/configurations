@@ -3,9 +3,14 @@
   "theme": {
     "name": "system"
   },
+  "diffs": {
+    "wrap": "word"
+  },
   "session": {
     "sidebar": "hide",
+    "scrollbar": true,
     "markdown": "rendered"
   },
-  "plugins": ["./herdr-opencode", "oh-my-opencode-slim", "./last-prompt", "-opencode.prompt.footer", "./context-footer"]
+  "plugins": ["oh-my-opencode-slim", "./last-prompt", "-opencode.prompt.footer", "./context-footer"],
+  "animations": true
 }

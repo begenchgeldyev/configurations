@@ -5,9 +5,12 @@ unset NO_COLOR
 stty -ixon 2>/dev/null   # allow herdr Ctrl-S prefix
 
 eval "$(starship init zsh)"
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-. "$HOME/.atuin/bin/env"
-eval "$(atuin init zsh)"
+# Machine-tolerant: skip tools not installed on this host
+[[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if command -v atuin >/dev/null 2>&1; then
+  [[ -f "$HOME/.atuin/bin/env" ]] && . "$HOME/.atuin/bin/env"
+  eval "$(atuin init zsh)"
+fi
 
 alias v='nvim'
 alias c='opencode'

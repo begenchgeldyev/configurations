@@ -17,8 +17,22 @@
         "orchestrator": {
           "model": [
             "synecta/ext-ollama-deepseek-v4.1-flash",
-            "synecta/ru-ya-deepseek-v4.1-flash",
-            "openai/gpt-6.1-sol"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            }
           ],
           "skills": [
             "*"
@@ -31,9 +45,23 @@
         },
         "oracle": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
-            "synecta/ru-ya-deepseek-v4.1-flash",
-            "openai/gpt-6.1-terra"
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ],
           "skills": [
             "simplify"
@@ -50,9 +78,23 @@
         },
         "librarian": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
-            "synecta/ru-ya-deepseek-v4.1-flash",
-            "openai/gpt-6-luna"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ],
           "skills": [],
           "mcps": [
@@ -62,18 +104,46 @@
         },
         "explorer": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
-            "synecta/ru-ya-deepseek-v4.1-flash",
-            "openai/gpt-6-luna"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ],
           "skills": [],
           "mcps": []
         },
         "designer": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
-            "synecta/ru-ya-deepseek-v4.1-flash",
-            "openai/gpt-6-luna"
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ],
           "skills": [],
           "mcps": [
@@ -83,20 +153,46 @@
         },
         "fixer": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
-            "synecta/ru-ya-deepseek-v4.1-flash",
-            "openai/gpt-6-luna"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ],
           "skills": [],
           "mcps": []
         },
         "observer": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
             {
               "id": "gemini/gemini-3-flash",
               "variant": "low"
-            }
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ],
           "skills": [],
           "mcps": []
@@ -108,50 +204,150 @@
       "agents": {
         "orchestrator": {
           "model": [
-            "openai/gpt-6.1-sol",
-            "gemini/gemini-3.8-flash-high",
-            "openai/gpt-6-luna"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ],
           "mcps": []
         },
         "oracle": {
           "model": [
-            "openai/gpt-6.1-terra",
-            "gemini/gemini-3.8-flash-high",
-            "openai/gpt-6.1-sol"
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ]
         },
         "librarian": {
           "model": [
-            "openai/gpt-6-luna",
-            "gemini/gemini-3.5-flash-lite"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ]
         },
         "explorer": {
           "model": [
-            "gemini/gemini-3.5-flash-lite",
-            "openai/gpt-6-luna"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ]
         },
         "designer": {
           "model": [
-            "openai/gpt-6-luna",
-            "gemini/gemini-3.8-flash-high"
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ]
         },
         "fixer": {
           "model": [
-            "openai/gpt-6-luna",
-            "gemini/gemini-3-flash"
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6-astra-fast",
+              "variant": "high"
+            },
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ]
         },
         "observer": {
           "model": [
             {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "high"
+            },
+            {
+              "id": "openai/gpt-6.1-sol-fast",
+              "variant": "medium"
+            },
+            {
+              "id": "openai/gpt-5.6-terra-fast",
+              "variant": "high"
+            },
+            {
               "id": "gemini/gemini-3-flash",
               "variant": "low"
             },
-            "openai/gpt-6-luna"
+            "synecta/ext-ollama-deepseek-v4.1-flash"
           ]
         }
       }

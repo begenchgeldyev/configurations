@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+#MISE description="Push the workstation opencode config to the server VPS with Synecta models stripped"
+#USAGE flag "-n --dry-run" help="Build the payload locally and stop before touching the remote host"
+#USAGE arg "[host]" help="SSH host from ~/.ssh/config" default="server"
+# Push ~/.config/opencode to a remote host that reaches cli-proxy-api but not the
+# Synecta hub: symlinks are dereferenced, the synecta provider and every
+# synecta/* model reference are dropped, and workstation paths are rewritten to
+# /root/... See docs/remote-opencode.md.
+set -euo pipefail
+
+host=${usage_host:-server}
+dry_run=${usage_dry_run:-false}
+# Also work when invoked directly, outside `mise run`.
+for arg in "$@"; do
+  case $arg in
+    -n | --dry-run) dry_run=true ;;
+    -*) ;;
+    *) host=$arg ;;
+  esac
+done
+src=$HOME/.config/opencode
+stage=${TMPDIR:-/tmp}/opencode-remote-config
+
+rm -rf "$stage"
+mkdir -p "$stage"
+# .env stays behind (secrets are copied by hand); node_modules belongs to the host.
+tar -chf - --exclude='.env' --exclude='*.bak.*' --exclude='service.json' --exclude='node_modules' \
+  -C "$src" . | tar -xf - -C "$stage"
+
+node - "$stage" <<'NODE'
+const fs = require("fs");
+const path = require("path");
+const dir = process.argv[2];
+
+// opencode.json: cli-proxy-api providers only.
+const ocPath = path.join(dir, "opencode.json");
+const oc = JSON.parse(fs.readFileSync(ocPath, "utf8"));
+delete oc.provider?.synecta;
+oc.provider.openai = {
+  name: "Codex via kz",
+  blacklist: ["gpt-6-astra-pro"],
+  options: { baseURL: "http://208.92.227.18:8317/v1", apiKey: "{env:VPS_API_KEY}" },
+};
+oc.model = "openai/gpt-6.1-sol";
+oc.small_model = "openai/gpt-6-luna";
+oc.skills.paths = ["/root/.config/opencode/skills"];
+for (const p of oc.plugins) {
+  if (p && typeof p === "object" && p.package) {
+    p.package = "/root/.config/opencode/proxy-model-sync";
+  }
+  if (p && typeof p === "object" && p.options?.providers) {
+    p.options.providers = [
+      { id: "openai", family: "codex", exclude: ["gpt-6-astra-pro"] },
+      { id: "gemini", family: "gemini" },
+    ];
+  }
+}
+fs.writeFileSync(ocPath, JSON.stringify(oc, null, 2) + "\n");
+
+// oh-my-opencode-slim.json: keep one preset, merged "work" + "personal", so the
+// host has no synecta/* model left at all.
+const slimPath = path.join(dir, "oh-my-opencode-slim.json");
+const slim = JSON.parse(fs.readFileSync(slimPath, "utf8"));
+const merge = (base, over) => {
+  if (Array.isArray(base) && Array.isArray(over)) return over;
+  if (base && over && typeof base === "object" && typeof over === "object") {
+    const out = { ...base };
+    for (const [k, v] of Object.entries(over)) out[k] = merge(base[k], v);
+    return out;
+  }
+  return over === undefined ? base : over;
+};
+const base = slim.presets?.work?.agents ?? slim.presets?.openai ?? Object.values(slim.presets ?? {})[0]?.agents;
+const over = slim.presets?.personal?.agents ?? {};
+if (!base) throw new Error("unexpected oh-my-opencode-slim.json: no agent presets found");
+const agents = {};
+for (const name of Object.keys(base)) agents[name] = merge(base[name], over[name] ?? {});
+for (const cfg of Object.values(agents)) {
+  if (Array.isArray(cfg?.model)) {
+    cfg.model = cfg.model.filter((m) => typeof m !== "string" || !m.startsWith("synecta/"));
+  }
+}
+fs.writeFileSync(slimPath, JSON.stringify({ ...slim, preset: "personal", presets: { personal: { agents } } }, null, 2) + "\n");
+
+const left = [];
+const walk = (v) => {
+  if (typeof v === "string" && v.startsWith("synecta/")) left.push(v);
+  else if (Array.isArray(v)) v.forEach(walk);
+  else if (v && typeof v === "object") Object.values(v).forEach(walk);
+};
+walk(oc);
+walk(JSON.parse(fs.readFileSync(slimPath, "utf8")));
+if (left.length) throw new Error(`synecta model refs left: ${left.join(", ")}`);
+NODE
+
+echo "staged: $stage"
+echo "  model:    $(jq -r .model "$stage/opencode.json")"
+echo "  preset:   $(jq -r .preset "$stage/oh-my-opencode-slim.json")"
+echo "  agents:   $(jq -r '.presets.personal.agents | keys | join(", ")' "$stage/oh-my-opencode-slim.json")"
+
+if [[ $dry_run == true ]]; then
+  echo "dry run: nothing sent to $host"
+  exit 0
+fi
+
+stamp=$(date +%s)
+ssh "$host" "mkdir -p /root/backups && tar czf /root/backups/opencode-config-$stamp.tgz -C /root/.config opencode"
+echo "backup:   /root/backups/opencode-config-$stamp.tgz"
+
+rsync -rlpt --itemize-changes -e ssh "$stage/" "$host:/root/.config/opencode/" | sed 's/^/  /'
+
+cat <<EOF
+done. verify on the host:
+  ssh $host 'bash -lc "opencode --version && opencode models | head"'
+  ssh $host 'bash -lc "cd /root && opencode run \\"reply with exactly: ok\\""'
+EOF

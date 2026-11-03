@@ -27,38 +27,51 @@ Gotchas:
 
 ## 2. Packages and opencode
 
+The host runs the same V2 line as the workstation. `curl -fsSL https://opencode.ai/install | bash`
+installs the V1 binary (`1.19.5`) and V1 quietly drops V2-only settings — the log then reads
+`configuration compatibility diagnostic … path=["plugins"] kind=unsupported action="Omitted native setting that cannot be represented in V1"`,
+so no plugin (superpowers, oh-my-opencode-slim, proxy-model-sync) loads. Copy the
+workstation binary instead:
+
 ```bash
-apt-get update -qq && apt-get install -y -qq tar gzip git
-curl -fsSL https://opencode.ai/install | bash   # -> /root/.opencode/bin
-ln -sf /root/.opencode/bin/opencode /usr/local/bin/opencode
+rsync -z ~/.opencode/bin/opencode server:/root/.opencode/bin/opencode-v2.1.2
+ssh server 'cp -p /root/.opencode/bin/opencode /root/.opencode/bin/opencode-v1.19.5'
+ssh server 'cp -f /root/.opencode/bin/opencode-v2.1.2 /root/.opencode/bin/opencode &&
+            ln -sfn /root/.opencode/bin/opencode /usr/local/bin/opencode'
 ```
 
-`tar` and `gzip` are required by the installer, `git` by the superpowers plugin.
-The image ships none of them.
+`/etc/profile.d/opencode-env.sh` puts `/root/.opencode/bin` ahead of `/usr/local/bin`,
+so the switch has to happen on the file inside that directory; repointing the
+`/usr/local/bin` symlink alone leaves login shells on the old binary. On first run V2
+installs the plugins into `/root/.cache/opencode/npm/` (~200 MB, a few seconds) — a
+`ServiceUnavailableError: Location plugins did not finish activating` during that
+window just means "retry".
+
+`git` is required by the superpowers plugin (`git+https://…`); the base image
+ships neither it nor `tar`/`gzip`.
 
 ## 3. Config
 
-Copy `~/.config/opencode` from the workstation, dereferencing symlinks, then
-rewrite the two absolute paths:
+`mise run sync-remote-opencode` pushes the workstation config (add `--dry-run` to
+inspect the payload, `mise run sync-remote-opencode <host>` for another host). It:
 
-| in `opencode.json` | workstation | remote |
-| --- | --- | --- |
-| `skills.paths[0]` | `~/projects/mattpocock-skills/skills` | `/root/.config/opencode/skills` |
-| `plugins[].package` (proxy-model-sync) | `~/projects/configurations/.config/opencode/proxy-model-sync` | `/root/.config/opencode/proxy-model-sync` |
+- dereferences symlinks and leaves `.env` and `node_modules` on the workstation;
+- drops the `synecta` provider, points `model`/`small_model` at cli-proxy-api and keeps
+  `openai` + `gemini` on `http://208.92.227.18:8317/v1` with `{env:VPS_API_KEY}`;
+- flattens `oh-my-opencode-slim.json` to one `personal` preset (local `work` merged with
+  `personal`), so no `synecta/*` model survives in any agent;
+- rewrites the two absolute paths to `/root/.config/opencode/…`:
 
-Drop the `synecta` provider and repoint the model defaults at cli-proxy-api; all
-agents in `oh-my-opencode-slim.json` and `agents/*.md` must lose their
-`synecta/...` models too:
+  | in `opencode.json` | workstation | remote |
+  | --- | --- | --- |
+  | `skills.paths[0]` | `~/projects/mattpocock-skills/skills` | `/root/.config/opencode/skills` |
+  | `plugins[].package` (proxy-model-sync) | `~/projects/configurations/.config/opencode/proxy-model-sync` | `/root/.config/opencode/proxy-model-sync` |
 
-```jsonc
-"model": "openai/gpt-6.1-sol",
-"small_model": "openai/gpt-6-luna",
-// providers: only `openai` and `gemini`, both
-// http://208.92.227.18:8317/v1 with {env:VPS_API_KEY}
-```
+- tars `/root/.config/opencode` into `/root/backups/` before rsyncing over it.
 
 Keep `proxy-model-sync` — it pulls the live model list from
-`http://208.92.227.18:8317/v1/models`.
+`http://208.92.227.18:8317/v1/models`. `skills/` and `plugins/repo-skills/` are plain
+copies on the host and are refreshed only when the source repositories change.
 
 ## 4. Keys
 
@@ -87,12 +100,15 @@ The same guarded `set -a; . ~/.config/opencode/.env; set +a` block goes into
 ## 5. Verify
 
 ```bash
-opencode --version                      # 1.19.5
-opencode debug config | head            # model/small_model, providers: gemini, openai
-opencode models | grep -c '^openai/'    # ~79 models from cli-proxy-api
-opencode run -m openai/gpt-6.1-sol "reply with exactly: ok"
+opencode --version                          # v2.1.2
+command -v opencode                         # /root/.opencode/bin/opencode (login shell too)
+opencode debug config | jq '.[0].info | {model, small_model}'   # V2 prints a document list
+opencode models | grep -c '^openai/'        # ~26 models synced from cli-proxy-api
+opencode run "reply with exactly: ok"       # banner shows `orchestrator · gpt-6.1-sol`
 ```
 
+`opencode run` printing `> build · …` instead of `> orchestrator · …` means
+oh-my-opencode-slim did not load — check the V2 binary and the `plugins` entry first.
 `Unauthorized: Invalid API key` means `VPS_API_KEY` was not in the environment —
 check the profile blocks, not the key itself.
 
@@ -101,3 +117,6 @@ check the profile blocks, not the key itself.
 Jira / Confluence / GitLab / Figma / GitHub tokens stay on the workstation, and
 the matching MCP servers cannot start on this host anyway: there is no `docker`,
 `glab`, or `node`/`npx`.
+
+`herdr` is not installed either, so the slim panes have no multiplexer to open;
+agents still run, they just do not get their own pane.

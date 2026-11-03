@@ -1,0 +1,17 @@
+id = "worktree-autosync"
+name = "worktree-autosync"
+version = "0.1.0"
+description = "Open every git worktree of the repositories in the session as a workspace, so checkouts show up in the sidebar"
+min_herdr_version = "0.9.5"
+platforms = ["linux"]
+
+# herdr lists workspaces, not git worktrees. Without this the sidebar only ever
+# shows the checkouts that were opened by hand.
+[[startup]]
+command = ["/home/begench/.local/bin/herdr-sync-worktrees", "--quiet"]
+
+# Same reconcile on demand, for worktrees created after herdr started.
+[[actions]]
+id = "sync-worktrees"
+title = "Sync worktrees into the sidebar"
+command = ["/home/begench/.local/bin/herdr-sync-worktrees"]
