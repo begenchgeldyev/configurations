@@ -3,7 +3,7 @@
   "preset": "work",
   "multiplexer": {
     "type": "herdr",
-    "viewer": "tui"
+    "viewer": "mini"
   },
   "disabled_agents": [],
   "image_routing": "direct",
