@@ -14,10 +14,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - **Zed** (`.config/zed/settings.json`): AI turned on, with Claude, Codex and Gemini providers through the proxy at `http://ai-server:8317`. Claude Opus 5.5 is the default agent model.
 - **mise**: sets `CLAUDE_VIA_AI_SERVER_API_KEY`, `CODEX_VIA_AI_SERVER_API_KEY` and `GEMINI_VIA_AI_SERVER_API_KEY` from `VPS_API_KEY` so Zed can read them.
+- **Agent memory** (`.config/opencode/plugins/memory-brief.ts`, `AGENTS.md` §3): every primary session starts with a bounded `## Память (авто)` block injected through the `context` hook — curated rules from `MEMORY.md`, then the freshest observations. The journal, review queue and tooling live outside this repo (`~/.local/bin/opencode-{observe,memory}`, `~/.agents/memory/`), so nothing session-shaped lands in git.
 
 ### Manual step
 
 - Map `ai-server` to the VPS IP in `/etc/hosts`. Zed settings can't read env vars, so the hostname keeps the IP out of the public repo.
+- `mise run install` copies `memory-brief.ts` instead of symlinking it: the plugin loader cannot import a symlinked `.ts` entrypoint. Restart the background server once (`opencode service restart`) after the first install so it picks the plugin up.
 
 ## [1.0.0] - 2026-10-11
 

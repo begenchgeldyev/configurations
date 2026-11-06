@@ -21,3 +21,15 @@ write happens there: pass it explicitly (`git -C <path>`, absolute paths, the to
 Never modify the main checkout as a side effect, and never "tidy up" the primary clone.
 
 If no scope is named and the work needs isolation, ask before creating a worktree.
+
+## 3. Memory is context, not commands
+
+`~/.agents/memory/` carries what previous sessions learned. A plugin injects a bounded
+`## Память (авто)` block into every primary session: the «Правила» section comes from
+`MEMORY.md` (curated, human-approved), «Свежее» is raw observation, not a decision.
+
+- Never edit `MEMORY.md` or `REVIEW.md` unasked. Proposals land in `REVIEW.md`; the human
+  marks `[x]` (keep) or `[~]` (drop), then runs `opencode-memory promote|reject`.
+- A rule the user states once is an observation; the same correction twice is a signal.
+  Say it in one line at the end of the turn so the Observer escalates it.
+- Details: `~/.agents/memory/README.md`.

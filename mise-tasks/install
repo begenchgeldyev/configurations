@@ -12,6 +12,14 @@ act() { [[ $dry_run == true ]] || "$@"; }
 while IFS= read -r -d '' rel; do
   case $rel in
     .gitignore | .env.example | README.md | CHANGELOG.md | mise-tasks/*) continue ;;
+    .config/opencode/plugins/memory-brief.ts)
+      # Copied, not linked: the plugin loader fails to import a symlinked .ts
+      # entrypoint, so this one file must be a real file in the config dir.
+      if cmp -s "$repo/$rel" "$HOME/$rel"; then continue; fi
+      echo "copy     ~/$rel"
+      act mkdir -p "$(dirname "$HOME/$rel")"
+      act cp "$repo/$rel" "$HOME/$rel"
+      continue ;;
   esac
   src=$repo/$rel
   dst=$HOME/$rel
