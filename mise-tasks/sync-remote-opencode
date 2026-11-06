@@ -37,7 +37,7 @@ const ocPath = path.join(dir, "opencode.json");
 const oc = JSON.parse(fs.readFileSync(ocPath, "utf8"));
 delete oc.provider?.synecta;
 oc.provider.openai = {
-  name: "Codex via kz",
+  name: "Codex via proxy",
   blacklist: ["gpt-6-astra-pro"],
   options: { baseURL: "http://208.92.227.18:8317/v1", apiKey: "{env:VPS_API_KEY}" },
 };

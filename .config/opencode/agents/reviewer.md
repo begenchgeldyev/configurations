@@ -1,7 +1,7 @@
 ---
 description: Reviews code changes against repository standards and the originating spec
 mode: all
-model: openai/gpt-6-astra#high
+model: proxy/gpt-6-astra#high
 permission:
   edit: deny
   bash:

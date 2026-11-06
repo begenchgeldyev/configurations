@@ -31,7 +31,7 @@ First tagged release. It captures the setup in use since August 2025.
 - **Herdr** (`.config/herdr/`): `Ctrl-s` prefix, zsh as the default shell, `prefix-p` sidebar toggle, workspace navigation keys.
 - **Neovim** (`.config/nvim/`): packer with gruvbox, lualine, nvim-tree, telescope and treesitter.
 - **opencode v2** (`.config/opencode/`):
-  - Anthropic, OpenAI and Gemini providers through the kz proxy, configured with `VPS_IP` and `VPS_API_KEY`.
+  - Anthropic, OpenAI and Gemini providers through the proxy, configured with `VPS_IP` and `VPS_API_KEY`.
   - Chrome DevTools and GitHub MCP servers.
   - `reviewer` agent.
   - Herdr agent-state plugin.

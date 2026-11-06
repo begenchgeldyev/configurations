@@ -20,9 +20,9 @@
     }
   ],
   "provider": {
-    "kz": {
+    "proxy": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Codex via kz (cli-proxy-api)",
+      "name": "Codex via proxy (cli-proxy-api)",
       "options": {
         "baseURL": "{env:VPS_IP}",
         "apiKey": "{env:VPS_API_KEY}"
@@ -32,6 +32,7 @@
         "gpt-6.1-sol-fast": { "name": "GPT-6.1 Sol Fast (proxy, priority)" },
         "gpt-6-sol-fast": { "name": "GPT-6 Sol Fast (proxy, priority)" },
         "gpt-6.1-terra": { "name": "GPT-6.1 Terra (proxy)" },
+        "gpt-5.6-terra": { "name": "GPT-5.6 Terra (proxy)" },
         "gpt-6-sol": { "name": "GPT-6 Sol (proxy)" },
         "gpt-6-luna": { "name": "GPT-6 Luna (proxy)" },
         "gpt-6-astra": { "name": "GPT-6 Astra (proxy)" },
@@ -40,7 +41,7 @@
     },
     "gemini": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Gemini via kz",
+      "name": "Gemini via proxy",
       "options": {
         "baseURL": "http://208.92.227.18:8317/v1",
         "apiKey": "{env:VPS_API_KEY}"
