@@ -1,0 +1,163 @@
+#!/usr/bin/env python3
+"""Switch the slim preset and global Synecta MCPs, then restart OpenCode.
+
+Usage: opencode-profile work|personal
+OPENCODE_PROFILE_CONFIG_DIR overrides $XDG_CONFIG_HOME/opencode.
+OPENCODE_PROFILE_RESTART_COMMAND overrides 'opencode service restart'; it is
+split into arguments, not executed by a shell (use /usr/bin/true for no restart).
+
+Both files are staged and fsynced before replacement; a write failure rolls back
+completed replacements. Each replacement is atomic, not the pair: sudden power
+loss or SIGKILL between replacements cannot be made transactional with two JSON
+files. Existing symlinks are followed, never replaced. File modes/owners remain.
+"""
+
+import fcntl
+import json
+import os
+from pathlib import Path
+import shlex
+import stat
+import subprocess
+import sys
+import tempfile
+
+
+SERVERS = ("jira", "confluence", "gitlab")
+
+
+def stage_file(path, content, metadata):
+    """Create a durable sibling so replacement stays on the same filesystem."""
+    fd, name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    staged = Path(name)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            current = os.fstat(stream.fileno())
+            if (current.st_uid, current.st_gid) != (metadata.st_uid, metadata.st_gid):
+                os.fchown(stream.fileno(), metadata.st_uid, metadata.st_gid)
+            os.fchmod(stream.fileno(), stat.S_IMODE(metadata.st_mode))
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        return staged
+    except BaseException:
+        staged.unlink(missing_ok=True)
+        raise
+
+
+def sync_directory(path):
+    fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def persist_pair(paths, originals, documents):
+    pending = []
+    replacements = []
+    backups = []
+    committed = []
+    retained = set()
+    try:
+        # Prepare rollback copies too, before changing either live file.
+        for path, original, document in zip(paths, originals, documents):
+            metadata = path.stat()
+            content = (json.dumps(document, ensure_ascii=False, indent=2) + "\n").encode()
+            replacement = stage_file(path, content, metadata)
+            pending.append(replacement)
+            replacements.append(replacement)
+            backup = stage_file(path, original, metadata)
+            pending.append(backup)
+            backups.append(backup)
+        for path, original in zip(paths, originals):
+            if path.read_bytes() != original:
+                raise ValueError(f"config changed concurrently: {path}; retry")
+        try:
+            for index, (path, replacement) in enumerate(zip(paths, replacements)):
+                os.replace(replacement, path)
+                committed.append(index)
+                sync_directory(path.parent)
+        except BaseException as error:
+            rollback_errors = []
+            for index in reversed(committed):
+                try:
+                    os.replace(backups[index], paths[index])
+                    sync_directory(paths[index].parent)
+                except OSError as rollback_error:
+                    retained.add(backups[index])
+                    rollback_errors.append(f"{paths[index]}: {rollback_error}; "
+                                           f"original backup: {backups[index]}")
+            if rollback_errors:
+                raise RuntimeError(f"write failed ({error}); ROLLBACK FAILED: "
+                                   + "; ".join(rollback_errors)) from error
+            raise
+    finally:
+        for staged in pending:
+            if staged not in retained:
+                staged.unlink(missing_ok=True)
+
+
+def switch_profile(config_dir, profile):
+    paths = [(config_dir / name).resolve(strict=True) for name in
+             ("oh-my-opencode-slim.json", "opencode.json")]
+    if len(set(paths)) != 2:
+        raise ValueError("preset and global config must be different files")
+    originals = [path.read_bytes() for path in paths]
+    slim, global_config = [json.loads(content) for content in originals]
+    if not isinstance(slim, dict) or not isinstance(global_config, dict):
+        raise ValueError("both configurations must be JSON objects")
+    presets = slim.get("presets")
+    if not isinstance(presets, dict) or not isinstance(presets.get(profile), dict):
+        raise ValueError(f"missing preset definition: {profile}")
+    mcp = global_config.get("mcp")
+    servers = mcp.get("servers") if isinstance(mcp, dict) else None
+    if not isinstance(servers, dict):
+        raise ValueError("global config must define V2 mcp.servers")
+    for name in SERVERS:
+        if not isinstance(servers.get(name), dict):
+            raise ValueError(f"missing global MCP server definition: {name}")
+        servers[name]["disabled"] = profile == "personal"
+    slim["preset"] = profile
+    persist_pair(paths, originals, (slim, global_config))
+
+
+def main(argv=None):
+    args = sys.argv[1:] if argv is None else argv
+    if len(args) != 1 or args[0] not in ("work", "personal"):
+        print("usage: opencode-profile work|personal", file=sys.stderr)
+        return 2
+    profile = args[0]
+    saved = False
+    try:
+        restart = shlex.split(os.environ.get(
+            "OPENCODE_PROFILE_RESTART_COMMAND", "opencode service restart"))
+        if not restart:
+            raise ValueError("restart command must not be empty")
+        config_home = Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config")))
+        config_dir = Path(os.environ.get("OPENCODE_PROFILE_CONFIG_DIR", str(config_home / "opencode")))
+        # Lock the directory inode: no extra lock file and no replaced-file lock.
+        lock = os.open(config_dir, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX)
+            switch_profile(config_dir, profile)
+            saved = True
+            result = subprocess.run(restart, check=False)
+            if result.returncode:
+                print(f"opencode-profile: {profile} saved, but restart failed "
+                      f"(exit {result.returncode}); runtime may still use the previous profile.",
+                      file=sys.stderr)
+                return 1
+        finally:
+            os.close(lock)
+    except (OSError, ValueError, RuntimeError, KeyboardInterrupt) as error:
+        status = f"{profile} saved, but restart failed" if saved else "profile switch failed"
+        print(f"opencode-profile: {status}: {error}", file=sys.stderr)
+        return 1
+    print(f"opencode-profile: {profile} saved; Synecta MCPs "
+          f"{'enabled' if profile == 'work' else 'disabled'}; restart completed.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
