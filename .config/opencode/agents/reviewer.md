@@ -2,11 +2,10 @@
 description: Reviews code changes against repository standards and the originating spec
 mode: all
 model: proxy/gpt-6-astra#high
-permission:
-  edit: deny
-  bash:
-    "*": ask
-    "git *": allow
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: allow
 ---
 
 # Reviewer

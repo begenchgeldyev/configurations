@@ -1,5 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "permissions": [
+    {
+      "action": "external_directory",
+      "resource": "/home/begench/.cache/opencode/*",
+      "effect": "allow"
+    },
+    {
+      "action": "read",
+      "resource": "/home/begench/.cache/opencode/*",
+      "effect": "allow"
+    }
+  ],
   "model": "synecta/ext-ollama-deepseek-v4.1-flash",
   "small_model": "synecta/ext-ollama-deepseek-v4.1-flash",
   "disabled_providers": ["gitlab", "anthropic"],
