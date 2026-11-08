@@ -1,6 +1,5 @@
 onboarding = false
 [terminal]
-default_shell = "/usr/bin/bash"
 new_cwd = "follow"
 
 [keys]
