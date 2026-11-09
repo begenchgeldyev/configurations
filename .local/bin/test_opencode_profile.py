@@ -15,6 +15,18 @@ from unittest import mock
 
 
 SCRIPT = Path(__file__).with_name("opencode-profile")
+CONFIG_DIR = SCRIPT.parents[2] / ".config" / "opencode"
+
+# Hand-checked existing GPT ladders, including their order and variants.
+GPT_LADDER = [
+    {"id": "proxy/gpt-6.1-sol-fast", "variant": "high"},
+    {"id": "proxy/gpt-6.1-sol-fast", "variant": "medium"},
+    {"id": "proxy/gpt-5.6-terra", "variant": "high"},
+    {"id": "proxy/gpt-6-astra", "variant": "high"},
+]
+ORACLE_LADDER = [GPT_LADDER[2], GPT_LADDER[3], GPT_LADDER[0], GPT_LADDER[1]]
+DESIGNER_LADDER = [GPT_LADDER[3], GPT_LADDER[0], GPT_LADDER[1], GPT_LADDER[2]]
+VISION_LADDER = [*GPT_LADDER[:3], {"id": "gemini/gemini-3-flash", "variant": "low"}]
 
 
 class ProfileTests(unittest.TestCase):
@@ -26,7 +38,9 @@ class ProfileTests(unittest.TestCase):
         self.config.mkdir()
         self.slim = {"preset": "personal", "presets": {"work": {}, "personal": {}},
                      "unrelated": {"keep": [1, "yes"]}}
-        self.global_config = {"model": "unchanged", "mcp": {"timeout": 123,
+        self.global_config = {"model": "old/model", "small_model": "old/small",
+            "disabled_providers": ["gitlab", "synecta", "anthropic"],
+            "mcp": {"timeout": 123,
             "servers": {name: {"type": "local", "command": [name], "disabled": True}
                         for name in ("jira", "confluence", "gitlab")}}}
         self.global_config["mcp"]["servers"]["github"] = {
@@ -59,7 +73,13 @@ class ProfileTests(unittest.TestCase):
         return module
 
     def test_both_directions_preserve_unrelated_and_restart(self):
-        for profile in ("work", "personal"):
+        cases = (("personal", ["gitlab", "synecta", "anthropic"]),
+                 ("personal", ["gitlab", "synecta", "anthropic"]),
+                 ("work", ["gitlab", "anthropic"]),
+                 ("work", ["gitlab", "anthropic"]),
+                 ("personal", ["gitlab", "anthropic", "synecta"]),
+                 ("work", ["gitlab", "anthropic"]))
+        for profile, disabled in cases:
             with self.subTest(profile=profile):
                 result = self.run_profile(profile)
                 self.assertEqual(result.returncode, 0, result.stderr)
@@ -67,13 +87,126 @@ class ProfileTests(unittest.TestCase):
                 self.assertIn("restart completed", result.stdout)
                 expected_slim = dict(self.slim, preset=profile)
                 expected_global = copy.deepcopy(self.global_config)
+                expected_global["model"] = expected_global["small_model"] = (
+                    "proxy/gpt-6.1-sol-fast" if profile == "personal"
+                    else "synecta/ext-ollama-deepseek-v4.1-flash")
+                expected_global["disabled_providers"] = disabled
                 for name in ("jira", "confluence", "gitlab"):
                     expected_global["mcp"]["servers"][name]["disabled"] = profile == "personal"
                 self.assertEqual(json.loads(self.paths[0].read_text()), expected_slim)
                 self.assertEqual(json.loads(self.paths[1].read_text()), expected_global)
                 self.assertTrue(all(p.stat().st_mode & 0o777 == 0o640 for p in self.paths))
         self.assertEqual([json.loads(line) for line in self.log.read_text().splitlines()],
-                         [["service", "restart"], ["service", "restart"]])
+                         [["service", "restart"]] * 6)
+
+    def test_personal_disables_synecta_when_provider_list_is_absent(self):
+        del self.global_config["disabled_providers"]
+        self.paths[1].write_text(json.dumps(self.global_config))
+        for profile, expected in (("personal", ["synecta"]), ("personal", ["synecta"]),
+                                  ("work", []), ("work", [])):
+            with self.subTest(profile=profile):
+                result = self.run_profile(profile)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(json.loads(self.paths[1].read_text()).get("disabled_providers"),
+                                 expected)
+
+    def test_invalid_disabled_providers_cannot_save_or_restart(self):
+        for invalid in (None, "synecta", {}, ["gitlab", 1]):
+            with self.subTest(invalid=invalid):
+                self.paths[1].write_text(json.dumps(dict(
+                    self.global_config, disabled_providers=invalid)))
+                before = [p.read_bytes() for p in self.paths]
+                result = self.run_profile("personal")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual([p.read_bytes() for p in self.paths], before)
+                self.assertFalse(self.log.exists())
+
+    def test_real_config_roundtrip_accepts_work_and_personal_source_copies(self):
+        source_copy = self.root / "source-copy"
+        source_copy.mkdir()
+        originals = [(CONFIG_DIR / path.name).read_bytes() for path in self.paths]
+        for initial in ("work", "personal"):
+            with self.subTest(initial=initial):
+                slim, global_config = [json.loads(content) for content in originals]
+                slim["preset"] = initial
+                global_config["model"] = global_config["small_model"] = (
+                    "proxy/gpt-6.1-sol-fast" if initial == "personal"
+                    else "synecta/ext-ollama-deepseek-v4.1-flash")
+                global_config["disabled_providers"] = ["gitlab", "anthropic", "other"]
+                if initial == "personal":
+                    global_config["disabled_providers"].insert(1, "synecta")
+                for name in ("jira", "confluence", "gitlab"):
+                    global_config["mcp"]["servers"][name]["disabled"] = initial == "personal"
+                for path, document in zip(self.paths, (slim, global_config)):
+                    (source_copy / path.name).write_text(json.dumps(document))
+                self.assert_real_config_roundtrip(source_copy)
+        self.assertEqual([(CONFIG_DIR / path.name).read_bytes() for path in self.paths],
+                         originals)
+
+    def test_checked_in_configs_isolate_routes_and_roundtrip_without_live_writes(self):
+        self.assert_real_config_roundtrip(CONFIG_DIR)
+
+    def assert_real_config_roundtrip(self, source_dir):
+        sources = [source_dir / path.name for path in self.paths]
+        original_bytes = [p.read_bytes() for p in sources]
+        original_slim, original_global = [json.loads(content) for content in original_bytes]
+        initial = original_slim["preset"]
+        self.assertIn(initial, ("work", "personal"))
+        initial_model = ("proxy/gpt-6.1-sol-fast" if initial == "personal"
+                         else "synecta/ext-ollama-deepseek-v4.1-flash")
+        self.assertEqual(original_global["model"], initial_model)
+        self.assertEqual(original_global["small_model"], initial_model)
+        self.assertEqual("synecta" in original_global["disabled_providers"],
+                         initial == "personal")
+        for path, content in zip(self.paths, original_bytes):
+            path.write_bytes(content)
+        other = "personal" if initial == "work" else "work"
+        for profile in (other, other, initial, other, initial, initial):
+            with self.subTest(profile=profile):
+                result = self.run_profile(profile)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                slim, global_config = [json.loads(p.read_text()) for p in self.paths]
+                self.assertEqual(slim, dict(original_slim, preset=profile))
+                expected_global = copy.deepcopy(original_global)
+                expected_global["model"] = expected_global["small_model"] = (
+                    "proxy/gpt-6.1-sol-fast" if profile == "personal"
+                    else "synecta/ext-ollama-deepseek-v4.1-flash")
+                expected_global["disabled_providers"] = [
+                    name for name in original_global["disabled_providers"] if name != "synecta"]
+                if profile == "personal":
+                    expected_global["disabled_providers"].append("synecta")
+                for name in ("jira", "confluence", "gitlab"):
+                    expected_global["mcp"]["servers"][name]["disabled"] = profile == "personal"
+                self.assertEqual(global_config, expected_global)
+                for preset in ("work", "personal"):
+                    agents = slim["presets"][preset]["agents"]
+                    self.assertEqual(set(agents), {"orchestrator", "oracle", "librarian",
+                                                  "explorer", "designer", "fixer", "observer"})
+                    for name, agent in agents.items():
+                        ladder = {"oracle": ORACLE_LADDER, "designer": DESIGNER_LADDER,
+                                  "observer": VISION_LADDER}.get(name, GPT_LADDER)
+                        if preset == "work" and name != "observer":
+                            ladder = ["synecta/ext-ollama-deepseek-v4.1-flash", *ladder]
+                        self.assertEqual(agent["model"], ladder, (preset, name))
+                personal = slim["presets"]["personal"]
+                self.assertEqual(personal["extends"], "work")
+                self.assertEqual(personal["agents"]["orchestrator"]["mcps"], [])
+                work_agents = slim["presets"]["work"]["agents"]
+                self.assertEqual(work_agents["orchestrator"]["mcps"],
+                                 ["jira", "confluence", "gitlab"])
+                self.assertEqual(work_agents["oracle"]["permission"], {
+                    "edit": "deny", "write": "deny", "apply_patch": "deny",
+                    "ast_grep_replace": "deny"})
+                for agent in personal["agents"].values():
+                    self.assertNotIn("permission", agent)  # Keep inherited permissions.
+        self.assertEqual([p.read_bytes() for p in sources], original_bytes)
+        expected_initial_global = copy.deepcopy(original_global)
+        expected_initial_global["disabled_providers"] = [
+            name for name in original_global["disabled_providers"] if name != "synecta"]
+        if initial == "personal":
+            expected_initial_global["disabled_providers"].append("synecta")
+        self.assertEqual([json.loads(p.read_text()) for p in self.paths],
+                         [original_slim, expected_initial_global])
 
     def test_invalid_arguments_do_not_write_or_restart(self):
         before = [p.read_bytes() for p in self.paths]

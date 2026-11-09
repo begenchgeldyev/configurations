@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/oh-my-opencode-slim@latest/oh-my-opencode-slim.schema.json",
-  "preset": "personal",
+  "preset": "work",
   "multiplexer": {
     "type": "herdr",
     "viewer": "mini"
@@ -45,6 +45,7 @@
         },
         "oracle": {
           "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
             {
               "id": "proxy/gpt-5.6-terra",
               "variant": "high"
@@ -60,8 +61,7 @@
             {
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "medium"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ],
           "skills": [
             "simplify"
@@ -78,6 +78,7 @@
         },
         "librarian": {
           "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
             {
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
@@ -93,8 +94,7 @@
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ],
           "skills": [],
           "mcps": [
@@ -104,6 +104,7 @@
         },
         "explorer": {
           "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
             {
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
@@ -119,14 +120,14 @@
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ],
           "skills": [],
           "mcps": []
         },
         "designer": {
           "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
@@ -142,8 +143,7 @@
             {
               "id": "proxy/gpt-5.6-terra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ],
           "skills": [],
           "mcps": [
@@ -153,6 +153,7 @@
         },
         "fixer": {
           "model": [
+            "synecta/ext-ollama-deepseek-v4.1-flash",
             {
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
@@ -168,8 +169,7 @@
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ],
           "skills": [],
           "mcps": []
@@ -191,8 +191,7 @@
             {
               "id": "gemini/gemini-3-flash",
               "variant": "low"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ],
           "skills": [],
           "mcps": []
@@ -219,8 +218,7 @@
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ],
           "mcps": []
         },
@@ -241,8 +239,7 @@
             {
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "medium"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ]
         },
         "librarian": {
@@ -262,8 +259,7 @@
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ]
         },
         "explorer": {
@@ -283,8 +279,7 @@
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ]
         },
         "designer": {
@@ -304,8 +299,7 @@
             {
               "id": "proxy/gpt-5.6-terra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ]
         },
         "fixer": {
@@ -325,8 +319,7 @@
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ]
         },
         "observer": {
@@ -346,8 +339,7 @@
             {
               "id": "gemini/gemini-3-flash",
               "variant": "low"
-            },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            }
           ]
         }
       }

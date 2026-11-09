@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Switch the slim preset and global Synecta MCPs, then restart OpenCode.
+"""Switch slim routing, global defaults, Synecta provider/MCPs; restart OpenCode.
+
+Personal uses GPT defaults and disables Synecta and work MCPs. Work uses Synecta
+defaults and enables that provider and jira/confluence/gitlab. Agent ladders live
+in the selected slim preset (observer stays vision-capable; reviewer is unchanged).
 
 Usage: opencode-profile work|personal
 OPENCODE_PROFILE_CONFIG_DIR overrides $XDG_CONFIG_HOME/opencode.
@@ -24,6 +28,8 @@ import tempfile
 
 
 SERVERS = ("jira", "confluence", "gitlab")
+MODELS = {"personal": "proxy/gpt-6.1-sol-fast",
+          "work": "synecta/ext-ollama-deepseek-v4.1-flash"}
 
 
 def stage_file(path, content, metadata):
@@ -110,6 +116,16 @@ def switch_profile(config_dir, profile):
     presets = slim.get("presets")
     if not isinstance(presets, dict) or not isinstance(presets.get(profile), dict):
         raise ValueError(f"missing preset definition: {profile}")
+    disabled = global_config.get("disabled_providers", [])
+    if not isinstance(disabled, list) or not all(isinstance(name, str) for name in disabled):
+        raise ValueError("disabled_providers must be a list of provider names")
+    if profile == "personal":
+        if "synecta" not in disabled:
+            disabled.append("synecta")
+    else:
+        disabled = [name for name in disabled if name != "synecta"]
+    global_config["disabled_providers"] = disabled
+    global_config["model"] = global_config["small_model"] = MODELS[profile]
     mcp = global_config.get("mcp")
     servers = mcp.get("servers") if isinstance(mcp, dict) else None
     if not isinstance(servers, dict):
@@ -154,7 +170,8 @@ def main(argv=None):
         status = f"{profile} saved, but restart failed" if saved else "profile switch failed"
         print(f"opencode-profile: {status}: {error}", file=sys.stderr)
         return 1
-    print(f"opencode-profile: {profile} saved; Synecta MCPs "
+    print(f"opencode-profile: {profile} saved; model + small_model: {MODELS[profile]}; "
+          f"Synecta provider and work MCPs "
           f"{'enabled' if profile == 'work' else 'disabled'}; restart completed.")
     return 0
 

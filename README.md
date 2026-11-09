@@ -49,3 +49,19 @@ exec zsh
 - Edit configs in place (they are symlinks), then commit from this repo.
 - OpenCode's `last-prompt` TUI plugin shows the latest user prompt in a bar just above the composer. The bar matches the Questions panel's width and text inset, with a distinct background and a yellow left accent outside the background. Long prompts truncate to one line, with one row of padding above and below and no bottom margin. The bar takes its own three rows in the layout, so it does not cover the transcript. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.
 - OpenCode's `context-footer` replaces the built-in prompt footer to hide dollar costs while keeping context usage, live activity, and keyboard hints. It is paired with `-opencode.prompt.footer` in `cli.json`.
+
+### OpenCode profiles
+
+- `opencode-profile personal`: existing GPT agent ladders with no Synecta fallback;
+  global `model` and `small_model` become `proxy/gpt-6.1-sol-fast`. Disables the
+  Synecta provider and Jira/Confluence/GitLab MCPs; orchestrator MCP access is empty.
+- `opencode-profile work`: Synecta DeepSeek Flash first for all text agents, with
+  existing GPT fallbacks; both global defaults become
+  `synecta/ext-ollama-deepseek-v4.1-flash`. Enables Synecta and those work MCPs.
+- Observer keeps its vision-capable GPT/Gemini ladder in both profiles; the
+  separate reviewer stays GPT. Other settings and symlinks are preserved.
+- Each command saves both configs, then runs `opencode service restart`. Restart
+  failure is reported separately: saved settings may not yet be active. For an
+  isolated config copy, set `OPENCODE_PROFILE_CONFIG_DIR=/path/to/copy`; use
+  `OPENCODE_PROFILE_RESTART_COMMAND=/usr/bin/true` to save without restarting
+  (runtime routing then remains unchanged until reload).
