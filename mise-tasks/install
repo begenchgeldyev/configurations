@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Symlink the dotfiles into $HOME, then install mise tools"
+#MISE description="Symlink the dotfiles, install mise tools and agent-browser's browser/skill"
 #USAGE flag "-n --dry-run" help="Show the plan without changing anything"
 # Fresh machine: clone to ~/projects/configurations, cd there, then `mise trust && mise run install`.
 set -euo pipefail
@@ -38,5 +38,10 @@ while IFS= read -r -d '' rel; do
   act ln -s "$src" "$dst"
 done < <(git -C "$repo" ls-files -z)
 
-if [[ $dry_run == true ]]; then mise install --dry-run; else mise install; fi
+echo "run      mise install"
+act mise install
+echo "run      mise exec npm:agent-browser@0.43.0 -- agent-browser install"
+act mise exec npm:agent-browser@0.43.0 -- agent-browser install
+echo "run      mise exec npm:skills@1.8.1 -- skills add vercel-labs/agent-browser --skill agent-browser --global --agent opencode --yes"
+act mise exec npm:skills@1.8.1 -- skills add vercel-labs/agent-browser --skill agent-browser --global --agent opencode --yes
 [[ -e $HOME/.env ]] || echo "note: ~/.env is missing; copy .env.example there and fill in the API keys"

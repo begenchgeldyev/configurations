@@ -12,6 +12,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
+- **agent-browser**: mise pins the CLI to `0.43.0`; setup downloads Chromium and uses `skills@1.8.1` to install only the official global OpenCode discovery skill. Dry-run prints the plan without executing install commands. README covers browser prerequisites, skill discovery and isolated sessions.
 - **Zed** (`.config/zed/settings.json`): AI turned on, with Claude, Codex and Gemini providers through the proxy at `http://ai-server:8317`. Claude Opus 5.5 is the default agent model.
 - **mise**: sets `CLAUDE_VIA_AI_SERVER_API_KEY`, `CODEX_VIA_AI_SERVER_API_KEY` and `GEMINI_VIA_AI_SERVER_API_KEY` from `VPS_API_KEY` so Zed can read them.
 - **Agent memory** (`.config/opencode/plugins/memory-brief.ts`, `AGENTS.md` §3): every primary session starts with a bounded `## Память (авто)` block injected through the `context` hook — curated rules from `MEMORY.md`, then the freshest observations. The journal, review queue and tooling live outside this repo (`~/.local/bin/opencode-{observe,memory}`, `~/.agents/memory/`), so nothing session-shaped lands in git.

@@ -13,6 +13,43 @@ exec zsh
 
 - Existing files are kept as `<name>.bak.<time>`.
 - Safe to re-run. Re-run it after moving the clone.
+- Preview with `mise run install --dry-run`: prints the link/copy and install plan
+  without running mise installs, downloading tools or changing files.
+
+### agent-browser
+
+`mise run install` installs the pinned `npm:agent-browser` **0.43.0**, then runs
+`mise exec npm:agent-browser@0.43.0 -- agent-browser install` to download Chromium.
+Finally, it uses the pinned skills installer **1.8.1** to install only the official
+agent-browser discovery skill globally for OpenCode:
+
+```bash
+mise exec npm:skills@1.8.1 -- skills add vercel-labs/agent-browser --skill agent-browser --global --agent opencode --yes
+```
+
+Browser prerequisites: a supported Linux or macOS machine, network access for the
+CLI/skill/browser downloads, disk space for Chromium and its required OS libraries.
+On minimal Linux systems, an administrator must provision missing browser libraries
+separately; this installer never uses `sudo` or `--with-deps` and stops on failure.
+
+The skill lives at `~/.agents/skills/agent-browser/SKILL.md`, which OpenCode already
+discovers; no duplicate skill or permission change is needed. Start a new OpenCode
+run after setup so discovery picks it up. The official skill is a thin discovery
+stub: load the version-matched core guide before browser work, not a cached guide.
+From a shell with mise active:
+
+```bash
+agent-browser --version          # agent-browser 0.43.0
+agent-browser skills get core
+agent-browser --session my-task-unique open http://localhost:8613
+agent-browser --session my-task-unique snapshot -i
+# Interact using snapshot refs; take a fresh snapshot after navigation/DOM changes.
+agent-browser --session my-task-unique close
+```
+
+Choose a unique session per task, pass `--session` on every browser command, and
+close only that session. Prefer a local dev instance and stay within the task's
+authorization; setup does not grant production, admin-write or AI-request access.
 
 ## What's inside
 

@@ -7,6 +7,7 @@ gh = "latest"
 neovim = "latest"
 node = "25.8.0"
 "npm:@opencode/cli" = { version = "latest", allow_builds = ["@opencode/cli"] }
+"npm:agent-browser" = "0.43.0"
 "npm:playwright" = "latest"
 ripgrep = "latest"
 uv = "latest"
