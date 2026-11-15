@@ -144,12 +144,8 @@
     "servers": {
       "chrome-devtools": {
         "type": "local",
-        "command": [
-          "npx",
-          "-y",
-          "chrome-devtools-mcp@latest",
-          "--executablePath=/usr/bin/chromium"
-        ]
+        "disabled": true,
+        "command": ["npx", "-y", "chrome-devtools-mcp@latest", "--autoConnect"]
       },
       "github": {
         "type": "remote",
@@ -221,6 +217,11 @@
           "GITLAB_TOKEN": "{env:GITLAB_TOKEN}"
         },
         "disabled": false
+      },
+      "chrome-mcp": {
+        "type": "remote",
+        "oauth": false,
+        "url": "http://127.0.0.1:12306/mcp"
       }
     }
   },

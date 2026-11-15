@@ -220,7 +220,7 @@
               "variant": "high"
             }
           ],
-          "mcps": []
+          "mcps": ["chrome-mcp"]
         },
         "oracle": {
           "model": [
