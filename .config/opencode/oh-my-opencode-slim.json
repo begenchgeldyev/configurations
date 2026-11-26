@@ -16,7 +16,7 @@
       "agents": {
         "orchestrator": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
+            {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
             {
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
@@ -53,7 +53,7 @@
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
             },
-            "synecta/ext-ollama-deepseek-v4.1-flash"
+            {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"}
           ],
           "skills": [
             "simplify"
@@ -78,7 +78,7 @@
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
             },
-            "synecta/ext-ollama-deepseek-v4.1-flash",
+            {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
             {
               "id": "proxy/gpt-6-astra",
               "variant": "high"
@@ -94,7 +94,7 @@
           "model": [
             {
               "id": "synecta/ext-ollama-deepseek-v4.1-flash",
-              "variant": "medium"
+              "variant": "high"
             },
             {
               "id": "proxy/gpt-6.1-sol-fast",
@@ -121,7 +121,7 @@
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
             },
-            "synecta/ext-ollama-deepseek-v4.1-flash",
+            {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
             {
               "id": "proxy/gpt-5.6-terra",
               "variant": "high"
@@ -135,7 +135,7 @@
         },
         "fixer": {
           "model": [
-            "synecta/ext-ollama-deepseek-v4.1-flash",
+            {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
             {
               "id": "proxy/gpt-6.1-sol-fast",
               "variant": "high"
