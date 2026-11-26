@@ -53,7 +53,7 @@ exec zsh
 ### OpenCode profiles
 
 - `opencode-profile personal`: existing GPT agent ladders with no Synecta fallback;
-  global `model` and `small_model` become `proxy/gpt-6.1-sol-fast`. Disables the
+  global `model` and `small_model` become `proxy/gpt-6.2-sol`. Disables the
   Synecta provider and Jira/Confluence/GitLab MCPs; orchestrator MCP access is empty.
 - `opencode-profile work`: Synecta DeepSeek Flash first for all text agents, with
   existing GPT fallbacks; both global defaults become

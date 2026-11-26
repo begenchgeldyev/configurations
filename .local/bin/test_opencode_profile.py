@@ -19,8 +19,8 @@ CONFIG_DIR = SCRIPT.parents[2] / ".config" / "opencode"
 
 # Hand-checked existing GPT ladders, including their order and variants.
 GPT_LADDER = [
-    {"id": "proxy/gpt-6.1-sol-fast", "variant": "high"},
-    {"id": "proxy/gpt-6.1-sol-fast", "variant": "medium"},
+    {"id": "proxy/gpt-6.2-sol", "variant": "high"},
+    {"id": "proxy/gpt-6.2-sol", "variant": "medium"},
     {"id": "proxy/gpt-5.6-terra", "variant": "high"},
     {"id": "proxy/gpt-6-astra", "variant": "high"},
 ]
@@ -88,7 +88,7 @@ class ProfileTests(unittest.TestCase):
                 expected_slim = dict(self.slim, preset=profile)
                 expected_global = copy.deepcopy(self.global_config)
                 expected_global["model"] = expected_global["small_model"] = (
-                    "proxy/gpt-6.1-sol-fast" if profile == "personal"
+                    "proxy/gpt-6.2-sol" if profile == "personal"
                     else "synecta/ext-ollama-deepseek-v4.1-flash")
                 expected_global["disabled_providers"] = disabled
                 for name in ("jira", "confluence", "gitlab"):
@@ -130,7 +130,7 @@ class ProfileTests(unittest.TestCase):
                 slim, global_config = [json.loads(content) for content in originals]
                 slim["preset"] = initial
                 global_config["model"] = global_config["small_model"] = (
-                    "proxy/gpt-6.1-sol-fast" if initial == "personal"
+                    "proxy/gpt-6.2-sol" if initial == "personal"
                     else "synecta/ext-ollama-deepseek-v4.1-flash")
                 global_config["disabled_providers"] = ["gitlab", "anthropic", "other"]
                 if initial == "personal":
@@ -152,7 +152,7 @@ class ProfileTests(unittest.TestCase):
         original_slim, original_global = [json.loads(content) for content in original_bytes]
         initial = original_slim["preset"]
         self.assertIn(initial, ("work", "personal"))
-        initial_model = ("proxy/gpt-6.1-sol-fast" if initial == "personal"
+        initial_model = ("proxy/gpt-6.2-sol" if initial == "personal"
                          else "synecta/ext-ollama-deepseek-v4.1-flash")
         self.assertEqual(original_global["model"], initial_model)
         self.assertEqual(original_global["small_model"], initial_model)
@@ -169,7 +169,7 @@ class ProfileTests(unittest.TestCase):
                 self.assertEqual(slim, dict(original_slim, preset=profile))
                 expected_global = copy.deepcopy(original_global)
                 expected_global["model"] = expected_global["small_model"] = (
-                    "proxy/gpt-6.1-sol-fast" if profile == "personal"
+                    "proxy/gpt-6.2-sol" if profile == "personal"
                     else "synecta/ext-ollama-deepseek-v4.1-flash")
                 expected_global["disabled_providers"] = [
                     name for name in original_global["disabled_providers"] if name != "synecta"]

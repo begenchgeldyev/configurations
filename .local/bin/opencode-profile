@@ -28,7 +28,7 @@ import tempfile
 
 
 SERVERS = ("jira", "confluence", "gitlab")
-MODELS = {"personal": "proxy/gpt-6.1-sol-fast",
+MODELS = {"personal": "proxy/gpt-6.2-sol",
           "work": "synecta/ext-ollama-deepseek-v4.1-flash"}
 
 
