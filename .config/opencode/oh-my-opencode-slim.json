@@ -1,6 +1,7 @@
 {
   "$schema": "https://unpkg.com/oh-my-opencode-slim@latest/oh-my-opencode-slim.schema.json",
   "preset": "work",
+  "sessionPresetRouting": true,
   "multiplexer": {
     "type": "herdr",
     "viewer": "mini"
@@ -18,7 +19,7 @@
           "model": [
             {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
@@ -50,7 +51,7 @@
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"}
@@ -75,7 +76,7 @@
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
@@ -97,7 +98,7 @@
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
@@ -118,7 +119,7 @@
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
@@ -137,7 +138,7 @@
           "model": [
             {"id": "synecta/ext-ollama-deepseek-v4.1-flash", "variant": "high"},
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
@@ -155,7 +156,7 @@
         "observer": {
           "model": [
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
@@ -178,11 +179,11 @@
         "orchestrator": {
           "model": [
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "medium"
             },
             {
@@ -207,11 +208,11 @@
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "medium"
             }
           ]
@@ -219,11 +220,11 @@
         "librarian": {
           "model": [
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "medium"
             },
             {
@@ -239,11 +240,11 @@
         "explorer": {
           "model": [
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "medium"
             },
             {
@@ -263,11 +264,11 @@
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "medium"
             },
             {
@@ -279,11 +280,11 @@
         "fixer": {
           "model": [
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "medium"
             },
             {
@@ -299,11 +300,11 @@
         "observer": {
           "model": [
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "high"
             },
             {
-              "id": "proxy/gpt-6.1-sol-fast",
+              "id": "proxy/gpt-6.2-sol-fast",
               "variant": "medium"
             },
             {

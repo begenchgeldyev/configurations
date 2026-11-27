@@ -50,18 +50,37 @@ exec zsh
 - OpenCode's `last-prompt` TUI plugin shows the latest user prompt in a bar just above the composer. The bar matches the Questions panel's width and text inset, with a distinct background and a yellow left accent outside the background. Long prompts truncate to one line, with one row of padding above and below and no bottom margin. The bar takes its own three rows in the layout, so it does not cover the transcript. OpenCode automatically names new sessions; manually assigned titles are preserved. Restart the TUI after installing the plugin.
 - OpenCode's `context-footer` replaces the built-in prompt footer to hide dollar costs while keeping context usage, live activity, and keyboard hints. It is paired with `-opencode.prompt.footer` in `cli.json`.
 
-### OpenCode profiles
+### OpenCode presets
 
-- `opencode-profile personal`: existing GPT agent ladders with no Synecta fallback;
-  global `model` and `small_model` become `proxy/gpt-6.1-sol-fast`. Disables the
-  Synecta provider and Jira/Confluence/GitLab MCPs; orchestrator MCP access is empty.
-- `opencode-profile work`: Synecta DeepSeek Flash first for all text agents, with
-  existing GPT fallbacks; both global defaults become
-  `synecta/ext-ollama-deepseek-v4.1-flash`. Enables Synecta and those work MCPs.
-- Observer keeps its vision-capable GPT/Gemini ladder in both profiles; the
-  separate reviewer stays GPT. Other settings and symlinks are preserved.
-- Each command saves both configs, then runs `opencode service restart`. Restart
-  failure is reported separately: saved settings may not yet be active. For an
-  isolated config copy, set `OPENCODE_PROFILE_CONFIG_DIR=/path/to/copy`; use
-  `OPENCODE_PROFILE_RESTART_COMMAND=/usr/bin/true` to save without restarting
-  (runtime routing then remains unchanged until reload).
+Use oh-my-opencode-slim's `/preset` inside OpenCode instead of a custom shell
+command. Per-session preset routing is explicitly enabled in
+`.config/opencode/oh-my-opencode-slim.json`.
+
+```text
+/preset personal
+/preset work
+```
+
+- These commands apply the selected preset's subagent models and reasoning
+  variants to the current session without restarting OpenCode. The personal
+  preset uses the GPT chains, including `proxy/gpt-6.2-sol-fast`; work keeps its
+  Synecta-first and GPT fallback chains as configured.
+- In the TUI, run `/preset` without a name to choose **Current session** or
+  **Global default**. The checked-in default is `work`. Changing the global
+  default affects future sessions and default-bound sessions on their next
+  admission; explicitly bound sessions keep their saved settings until you
+  reapply a preset. In Web/Desktop, bare `/preset` displays the session binding
+  and configured defaults.
+- Session preset switching does **not** change the main-session model, global
+  `model`/`small_model` defaults, providers, prompts, tools, skills or MCPs.
+  Select the main-session model separately with `/models`, for example
+  `proxy/gpt-6.2-sol-fast` for personal use or
+  `synecta/ext-ollama-deepseek-v4.1-flash` for work. The checked-in global defaults
+  remain Synecta.
+- Manage MCP connections separately with `/mcps` and persistent provider/MCP
+  settings in `.config/opencode/opencode.json`. Selecting personal does not
+  disable Synecta or Jira/Confluence/GitLab: it is **not a work-tool isolation boundary**.
+- The repository no longer installs `opencode-profile` or tracks `.local/`.
+  Existing `~/.local/bin/opencode-profile` links or copies are not automatically removed
+  by `mise run install`; inspect and remove only that obsolete helper if present,
+  not your whole `~/.local/` directory.
